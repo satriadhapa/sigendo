@@ -1,83 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Login</title>
+    <title>SiGENDO - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtu4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-image: url({{ URL('storage/background.png') }});
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 800px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .img-section img {
+            width: 110%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .card-title {
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', sans-serif;
+        }
+
+        .sub-title {
+            background-color: #A80063;
+            color: white;
+            padding: 10px;
+            border-radius: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .sub-title-2 {
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            padding: 10px;
+            border-radius: 30px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group-text {
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 0;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
+
+        .form-control {
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control:focus {
+            border-color: #A80063;
+            box-shadow: 0 0 8px rgba(168, 0, 99, 0.3);
+        }
+
+        .btn-custom-login {
+            background-color: #A80063;
+            color: white;
+            border-radius: 30px;
+            padding: 10px 30px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-custom-login:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .login-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .form-section {
+            width: 100%;
+            max-width: 500px; /* Centering the form section */
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .login-content {
+                flex-direction: row;
+                gap: 20px;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="col-md-6 offset-md-3">
-        <form action="{{route('auth.verify')}}" method="post">
-            @csrf
-            <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email address</label>
-            <input type="email" name= "email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+    <div class="login-container">
+        <div class="col-lg-8">
+            <div class="card">
+                <h2 class="sub-title-2">SiGENDO</h2>
+                <div class="login-content">
+                    <div class="img-section">
+                        <img src="{{ URL('storage/nusaputra.png') }}" alt="Login Image">
+                    </div>
+                    <div class="form-section">
+                        <h1 class="card-title">Selamat Datang di SiGENDO (Sistem Genetika Jadwal Dosen)</h1>
+                        <h2 class="sub-title">Masuk ke Akun Anda</h2>
+                        @if(Session::has('msg'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ Session::get('msg') }}
+                        </div>
+                        @endif
+                        <form action="{{ route('auth.verify') }}" method="POST">
+                            @csrf
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="email" class="form-control" placeholder="nama@gmail.com" required>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password" class="form-control" placeholder="Kata Sandi" required>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-custom-login">Masuk</button>
+                                <a href="#" class="btn btn-custom-login">Buat Akun</a>
+                            </div>
+                            <p class="mt-3 text-center">Belum punya akun? <a href="#">Daftar</a></p>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" name= "password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>
+
 </html>
-
-
-
-{{-- <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout> --}}
-
-
