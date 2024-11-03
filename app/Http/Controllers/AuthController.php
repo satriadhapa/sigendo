@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function Ramsey\Uuid\v1;
-
 class AuthController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('auth.login');
     }
 
@@ -19,17 +18,29 @@ class AuthController extends Controller
             'email' => "required|email",
             'password' => "required",
         ]);
-        if(Auth::guard('admin')->attempt(['email' =>$request->email, 'password' =>$request->password, 'role'=> 'admin'])){
-            return redirect()->intended('/dashboard');
+
+        // Try logging in as admin
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->intended('/admin/dashboard');
         }
-        else if(Auth::guard('user')->attempt(['email' =>$request->email, 'password' =>$request->password])){
-            return redirect()->intended('/dashboard');
+        // Try logging in as regular user
+        elseif (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect()->intended('/user/dashboard');
         }
-        else{
-            return redirect('/')->with('msg', 'Email & password salah');
+        else {
+            return redirect()->back()->with('msg', 'Email & password incorrect');
         }
     }
-    public function logout(){
 
+    public function logout()
+    {
+        // Logout from admin or user guard based on which one is logged in
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } elseif (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+
+        return redirect(route('auth.index'));
     }
 }

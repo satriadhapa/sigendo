@@ -20,4 +20,12 @@ Route::get('/', [AuthController::class, 'index'])->name('auth.index');
 Route::post('/auth/verify', [AuthController::class, 'verify'])->name('auth.verify');
 
 Route::get('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::group(['middleware' => 'auth:admin'], function (){
+    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard.index');    
+});
+Route::group(['middleware' => 'auth:user'], function (){
+    Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard.index');    
+});
+
+

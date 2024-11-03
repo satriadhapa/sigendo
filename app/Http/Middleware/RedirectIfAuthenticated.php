@@ -20,10 +20,10 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         if(Auth::guard('admin')->check()){
-            return redirect('/dashboard');
+            return redirect('/admin/dashboard');
         }
         else if(Auth::guard('user')->check()){
-            return redirect('/dashboard');
+            return redirect('/user/dashboard');
         }
 
         return $next($request);
