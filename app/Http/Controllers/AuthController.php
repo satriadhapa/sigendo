@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -12,6 +14,28 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function showRegisterForm()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // Create a new user
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    return redirect()->route('auth.index')->with('msg', 'Akun berhasil dibuat. Silakan login.');
+}
     public function verify(Request $request)
     {
         $this->validate($request, [
@@ -19,27 +43,30 @@ class AuthController extends Controller
             'password' => "required",
         ]);
 
-        // Try logging in as admin
+        // Attempt to log in as admin
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->intended('/admin/dashboard');
         }
-        // Try logging in as regular user
+        // Attempt to log in as regular user
         elseif (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->intended('/user/dashboard');
-        }
-        else {
+        } else {
             return redirect()->back()->with('msg', 'Email & password incorrect');
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        // Logout from admin or user guard based on which one is logged in
+        // Logout from admin or user guard
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
-        } elseif (Auth::guard('web')->check()) {
-            Auth::guard('web')->logout();
+        } elseif (Auth::guard('user')->check()) {
+            Auth::guard('user')->logout();
         }
+
+        // Invalidate session and regenerate CSRF token
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect(route('auth.index'));
     }

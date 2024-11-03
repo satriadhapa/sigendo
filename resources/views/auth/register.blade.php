@@ -1,4 +1,4 @@
-<!-- resources/views/auth/login.blade.php -->
+<!-- resources/views/auth/register.blade.php -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SiGENDO - Login</title>
+    <title>SiGENDO - Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtu4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -30,7 +30,7 @@
 
         .card {
             max-width: 800px;
-            padding: 40px;
+            padding: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             background-color: rgba(255, 255, 255, 0.9);
@@ -109,14 +109,7 @@
             color: #fff;
         }
 
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .login-content {
+        .register-content {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -125,12 +118,12 @@
 
         .form-section {
             width: 100%;
-            max-width: 500px; /* Centering the form section */
+            max-width: 500px;
             margin: 0 auto;
         }
 
         @media (min-width: 768px) {
-            .login-content {
+            .register-content {
                 flex-direction: row;
                 gap: 20px;
                 justify-content: center;
@@ -144,20 +137,19 @@
         <div class="col-lg-8">
             <div class="card">
                 <h2 class="sub-title-2">SiGENDO</h2>
-                <div class="login-content">
+                <div class="register-content">
                     <div class="img-section">
-                        <img src="{{ URL('storage/nusaputra.png') }}" alt="Login Image">
+                        <img src="{{ URL('storage/nusaputra.png') }}" alt="Register Image">
                     </div>
                     <div class="form-section">
                         <h1 class="card-title">Selamat Datang di SiGENDO (Sistem Genetika Jadwal Dosen)</h1>
-                        <h2 class="sub-title">Masuk ke Akun Anda</h2>
-                        @if(Session::has('msg'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ Session::get('msg') }}
-                        </div>
-                        @endif
-                        <form action="{{ route('auth.verify') }}" method="POST">
+                        <h2 class="sub-title">Buat Akun Baru</h2>
+                        <form action="{{ route('auth.register.store') }}" method="POST">
                             @csrf
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required>
+                            </div>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                 <input type="email" name="email" class="form-control" placeholder="nama@gmail.com" required>
@@ -166,11 +158,14 @@
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                 <input type="password" name="password" class="form-control" placeholder="Kata Sandi" required>
                             </div>
-                            <div class="button-group">
-                                <button type="submit" class="btn btn-custom-login">Masuk</button>
-                                <a href="{{ route('auth.register') }}" class="btn btn-custom-login">Buat Akun</a>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi Kata Sandi" required>
                             </div>
-                            <p class="mt-3 text-center">Belum punya akun? <a href="{{ route('auth.register') }}">Daftar</a></p>
+                            <div class="button-group">
+                                <button type="submit" class="btn btn-custom-login">Daftar</button>
+                            </div>
+                            <p class="mt-3 text-center">Sudah punya akun? <a href="{{ route('auth.index') }}">Masuk</a></p>
                         </form>
                     </div>
                 </div>

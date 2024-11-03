@@ -11,6 +11,15 @@
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in as " . Auth::user()->name . "!") }}
                 </div>
+                <!-- Logout Button -->
+                <div class="p-6">
+                    <form method="POST" action="{{ route('auth.logout') }}">
+                        @csrf
+                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            {{ __('Logout') }}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
