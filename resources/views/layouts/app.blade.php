@@ -13,9 +13,25 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Custom Styles -->
+        <style>
+            body {
+                background-image: url({{ URL('storage/background.png') }});
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                min-height: 100vh;
+            }
+            .main-content {
+                background-color: rgba(255, 255, 255, 0.8); /* Optional: Background overlay */
+                padding: 20px;
+                border-radius: 8px;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 main-content">
 
             <!-- Page Heading -->
             @if (isset($header))

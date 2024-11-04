@@ -16,5 +16,6 @@ Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard.index');
 });
 
+# route untuk register akun
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register.store');

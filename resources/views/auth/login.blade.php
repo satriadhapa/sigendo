@@ -62,7 +62,7 @@
         }
 
         .sub-title-2 {
-            background-color: #ffffff;
+            /* background-color: #ff0000; */
             color: rgb(0, 0, 0);
             padding: 10px;
             border-radius: 30px;
