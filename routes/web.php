@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthController::class, 'index'])->name('auth.index');
@@ -10,6 +11,8 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logou
 
 Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard.index');
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profle');
+    Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
 });
 
 Route::group(['middleware' => 'auth:user'], function () {

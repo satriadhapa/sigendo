@@ -12,15 +12,7 @@
                     <!-- Main Content Area -->
                     <div class="flex-1 p-6 bg-gray-300">
                         <!-- Greeting Message with Profile Picture and Date -->
-                        <div class="mb-6 text-gray-900">
-                            <div class="flex items-center">
-                                <img src="{{ URL('storage/nusaputra.png') }}" alt="Profile Photo" class="h-16 w-16 rounded">
-                                <div>
-                                    <p class="text-2xl font-semibold">{{ __("Hey, " . Auth::user()->name) }}</p>
-                                    <p class="text-gray-600">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
-                                </div>
-                            </div>
-                        </div>
+                        @include('components.greeting')
                         <!-- Additional Content Section -->
                         <div class="text-center rounded-full">
                             <h1 class="welcome-heading">{{ __("Selamat Datang " . Auth::user()->name ) }}</h1>
