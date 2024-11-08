@@ -12,12 +12,12 @@
            class="p-3 rounded-full {{ request()->routeIs('admin.dashboard.index') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Dashboard
         </a>
-        <a href="{{ route('admin.profle') }}"
-           class="p-3 rounded-full {{ request()->routeIs('admin.profle') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
+        <a href="{{ route('admin.profile') }}"
+           class="p-3 rounded-full {{ request()->routeIs('admin.profile') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Profile
         </a>
-        <a href="#"
-           class="p-3 rounded-full {{ request()->is('program-studi') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
+        <a href="{{route('admin.programstudi')}}"
+           class="p-3 rounded-full {{ request()->routeIs('admin.programstudi') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Program Studi
         </a>
         <a href="#"

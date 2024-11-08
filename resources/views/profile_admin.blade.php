@@ -35,6 +35,10 @@
                                 <h2 class="text-xl font-semibold text-gray-700">Jabatan Akademik</h2>
                                 <p class="text-2xl font-bold text-gray-800">{{ Auth::user()->jabatan_akademik ?? 'Not Provided' }}</p>
                             </div>
+                            <div class="custom-card">
+                                <h2 class="text-xl font-semibold text-gray-700">Program Studi</h2>
+                                <p class="text-2xl font-bold text-gray-800">{{ $admin->programStudi->name ?? 'Not Assigned' }}</p>
+                            </div>
                         </div>
 
                         <!-- Button to Open Edit Profile Modal -->
@@ -70,7 +74,17 @@
                                         <label for="jabatan_akademik" class="text-lg font-semibold text-gray-700">Jabatan Akademik</label>
                                         <input type="text" name="jabatan_akademik" id="jabatan_akademik" class="p-2 border border-gray-400 rounded" value="{{ Auth::user()->jabatan_akademik }}">
                                     </div>
-
+                                    <div class="flex flex-col">
+                                        <label for="program_studi_id" class="text-lg font-semibold text-gray-700">Program Studi</label>
+                                        <select name="program_studi_id" id="program_studi_id" class="p-2 border border-gray-400 rounded">
+                                            <option value="">Select Program Studi</option>
+                                            @foreach ($programStudies as $program)
+                                                <option value="{{ $program->id }}" {{ $admin->program_studi_id == $program->id ? 'selected' : '' }}>
+                                                    {{ $program->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="flex justify-end space-x-4 mt-4">
                                         <button type="button" onclick="closeModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">
                                             Cancel
