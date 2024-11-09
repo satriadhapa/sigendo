@@ -46,7 +46,8 @@ class AdminController extends Controller
     // Display the list of Program Studi
     public function programStudi()
     {
-        $programStudi = ProgramStudi::all();
+        // Paginate program studi, 5 items per page
+        $programStudi = ProgramStudi::paginate(5);
         return view('prodi_admin', compact('programStudi'));
     }
 
@@ -69,14 +70,14 @@ class AdminController extends Controller
             'kode' => $request->input('kode'),
         ]);
 
-        return redirect()->route('admin.program_studi')->with('success', 'Program Studi created successfully.');
+        return redirect()->route('admin.programstudi')->with('success', 'Program Studi created successfully.');
     }
 
     // Show the form for editing an existing Program Studi
     public function editProgramStudi($id)
     {
         $programStudi = ProgramStudi::findOrFail($id);
-        return view('edit_program_studi', compact('programStudi'));
+        return view('edit_program_studi', compact('programStudi')); // Use this view for editing
     }
 
     // Update an existing Program Studi in the database

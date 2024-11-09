@@ -15,7 +15,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
 
     Route::get('/admin/program-studi', [AdminController::class, 'programStudi'])->name('admin.programstudi');
-    Route::post('/admin/program-studi/store', [AdminController::class, 'storeProgramStudi'])->name('admin.programstudi.store');
+    Route::post('/admin/program-studi', [AdminController::class, 'storeProgramStudi'])->name('admin.programstudi.store');
+    Route::get('/admin/program-studi/create', [AdminController::class, 'createProgramStudi'])->name('admin.programstudi.create');
     Route::get('/admin/program-studi/{id}/edit', [AdminController::class, 'editProgramStudi'])->name('admin.programstudi.edit');
     Route::put('/admin/program-studi/{id}', [AdminController::class, 'updateProgramStudi'])->name('admin.programstudi.update');
     Route::delete('/admin/program-studi/{id}', [AdminController::class, 'destroyProgramStudi'])->name('admin.programstudi.destroy');
