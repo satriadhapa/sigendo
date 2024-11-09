@@ -64,7 +64,7 @@
                             </div>
                             <div class="custom-card">
                                 <h2 class="text-xl font-semibold text-gray-700">Jumlah Program Studi</h2>
-                                <p class="text-4xl font-bold text-gray-800">6</p>
+                                <p class="text-4xl font-bold text-gray-800">{{ $programStudiCount }}</p>
                             </div>
                         </div>
                     </div>
