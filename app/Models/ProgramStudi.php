@@ -15,4 +15,8 @@ class ProgramStudi extends Model
     {
         return $this->hasMany(Admin::class, 'program_studi_id');
     }
+    public function mataKuliahs()
+    {
+        return $this->hasMany(MataKuliah::class);
+    }
 }

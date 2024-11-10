@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProgramStudi;
+use App\Models\MataKuliah;
 
 class AdminController extends Controller
 {
@@ -104,5 +105,86 @@ class AdminController extends Controller
         $programStudi->delete();
 
         return redirect()->route('admin.programstudi')->with('success', 'Program Studi deleted successfully.');
+    }
+
+    // Display the list of Mata Kuliah
+    public function mataKuliah()
+    {
+        $mataKuliah = MataKuliah::with('programStudi')->paginate(5);
+        $programStudies = ProgramStudi::all(); // Retrieve all Program Studi
+
+        return view('matakuliah_admin', compact('mataKuliah', 'programStudies'));
+    }
+
+    // Show the form for creating a new Mata Kuliah
+    public function createMataKuliah()
+    {
+        $programStudies = ProgramStudi::all();
+        return view('create_matakuliah', compact('programStudies'));
+    }
+
+    // Store a newly created Mata Kuliah in the database
+    public function storeMataKuliah(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'sks' => 'required|integer|max:7',
+            'kode' => 'required|string|max:10|unique:mata_kuliahs,kode',
+            'program_studi_id' => 'required|exists:program_studi,id',
+        ]);
+
+        MataKuliah::create([
+            'name' => $request->input('name'),
+            'sks' => $request->input('sks'),
+            'kode' => $request->input('kode'),
+            'program_studi_id' => $request->input('program_studi_id'),
+        ]);
+
+        return redirect()->route('admin.matakuliah')->with('success', 'Mata Kuliah created successfully.');
+    }
+
+    // Show the form for editing an existing Mata Kuliah
+    public function editMataKuliah($id)
+    {
+        $mataKuliah = MataKuliah::findOrFail($id);
+        $programStudies = ProgramStudi::all();
+        return view('edit_matakuliah', compact('mataKuliah', 'programStudies'));
+    }
+
+    // Update an existing Mata Kuliah in the database
+    public function updateMataKuliah(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'sks' => 'required|string|max:7',
+            'kode' => 'required|string|max:10|unique:mata_kuliahs,kode,' . $id,
+            'program_studi_id' => 'required|exists:program_studi,id',
+        ]);
+
+        $mataKuliah = MataKuliah::findOrFail($id);
+        $mataKuliah->update([
+            'name' => $request->input('name'),
+            'sks' => $request->input('sks'),
+            'kode' => $request->input('kode'),
+            'program_studi_id' => $request->input('program_studi_id'),
+        ]);
+
+        return redirect()->route('admin.matakuliah')->with('success', 'Mata Kuliah updated successfully.');
+    }
+    public function mataKuliahByProgramStudi($id)
+    {
+        $programStudi = ProgramStudi::findOrFail($id); // Program Studi yang dipilih
+        $mataKuliah = MataKuliah::where('program_studi_id', $id)->paginate(5); // Data Mata Kuliah berdasarkan Program Studi
+        $programStudies = ProgramStudi::all(); // Semua Program Studi untuk pilihan di grid
+
+        return view('matakuliah_admin', compact('mataKuliah', 'programStudies', 'programStudi'));
+    }
+    // Delete a Mata Kuliah from the database
+    public function destroyMataKuliah($id)
+    {
+        $mataKuliah = MataKuliah::findOrFail($id);
+        $mataKuliah->delete();
+
+        return redirect()->route('admin.matakuliah')->with('success', 'Mata Kuliah deleted successfully.');
     }
 }
