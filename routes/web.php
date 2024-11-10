@@ -33,6 +33,13 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::put('/admin/matakuliah/{id}', [AdminController::class, 'updateMataKuliah'])->name('admin.matakuliah.update');
     Route::delete('/admin/matakuliah/{id}', [AdminController::class, 'destroyMataKuliah'])->name('admin.matakuliah.destroy');
 
+    # Route Ruangan
+    Route::get('/ruangan', [AdminController::class, 'indexRuangan'])->name('admin.ruangan.index');
+    Route::get('/ruangan/create', [AdminController::class, 'createRuangan'])->name('admin.ruangan.create');
+    Route::post('/ruangan', [AdminController::class, 'storeRuangan'])->name('admin.ruangan.store');
+    Route::get('/ruangan/{id}/edit', [AdminController::class, 'editRuangan'])->name('admin.ruangan.edit');
+    Route::put('/ruangan/{id}', [AdminController::class, 'updateRuangan'])->name('admin.ruangan.update');
+    Route::delete('/ruangan/{id}', [AdminController::class, 'destroyRuangan'])->name('admin.ruangan.destroy');
 });
 
 Route::group(['middleware' => 'auth:user'], function () {

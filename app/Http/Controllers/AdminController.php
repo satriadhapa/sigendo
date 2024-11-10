@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProgramStudi;
 use App\Models\MataKuliah;
+use App\Models\Ruangan;
 
 class AdminController extends Controller
 {
@@ -186,5 +187,56 @@ class AdminController extends Controller
         $mataKuliah->delete();
 
         return redirect()->route('admin.matakuliah')->with('success', 'Mata Kuliah deleted successfully.');
+    }
+
+    // Display list of Ruangan (Rooms)
+    public function indexRuangan()
+    {
+        $rooms = Ruangan::paginate(5); // Paginated list of rooms
+        return view('ruangan_admin', compact('rooms'));
+    }
+
+    // Show form to create a new Ruangan
+    public function createRuangan()
+    {
+        return view('create_ruangan');
+    }
+
+    // Store a new Ruangan in the database
+    public function storeRuangan(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:ruangan,name',
+        ]);
+
+        Ruangan::create($request->only(['name']));
+        return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil ditambahkan.');
+    }
+
+    // Show form to edit an existing Ruangan
+    public function editRuangan($id)
+    {
+        $room = Ruangan::findOrFail($id);
+        return view('edit_ruangan', compact('room'));
+    }
+
+    // Update an existing Ruangan in the database
+    public function updateRuangan(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:ruangan,name,'.$id
+        ]);
+
+        $room = Ruangan::findOrFail($id);
+        $room->update($request->only(['name']));
+        return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil diperbarui.');
+    }
+
+    // Delete a Ruangan from the database
+    public function destroyRuangan($id)
+    {
+        $room = Ruangan::findOrFail($id);
+        $room->delete();
+        return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil dihapus.');
     }
 }

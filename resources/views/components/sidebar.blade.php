@@ -28,8 +28,8 @@
            class="p-3 rounded-full {{ request()->routeIs('admin.matakuliah') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Mata Kuliah
         </a>
-        <a href="#"
-           class="p-3 rounded-full {{ request()->is('ruangan') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
+        <a href="{{route('admin.ruangan.index')}}"
+           class="p-3 rounded-full {{ request()->routeIs('admin.ruangan.index') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Ruangan
         </a>
         <a href="#"
