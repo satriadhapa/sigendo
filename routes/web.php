@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
     # Route Profile Admin
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+
+    # Route Lecturers
+    Route::get('/admin/lecturers', [AdminController::class, 'indexLecturers'])->name('admin.lecturers.index');
 
     # Route Program Studi
     Route::get('/admin/program-studi', [AdminController::class, 'programStudi'])->name('admin.programstudi');
@@ -57,5 +61,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
 Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard.index');
+    Route::get('/user/profile', [UserController::class, 'showProfile'])->name('user.profile');
+
 });
 

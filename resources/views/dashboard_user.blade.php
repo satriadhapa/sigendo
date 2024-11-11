@@ -1,24 +1,28 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <div class="flex min-h-screen">
+        <!-- Sidebar Component -->
+        @include('components.sidebar_user')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("Selamat Datang " . Auth::user()->name . "!") }}
-                </div>
-                <!-- Logout Button -->
-                <div class="p-6">
-                    <form method="POST" action="{{ route('auth.logout') }}">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                            {{ __('Logout') }}
-                        </button>
-                    </form>
+        <!-- Main Content Area -->
+        <div class="flex-1 py-12 px-6">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+                    <!-- Greeting Message with Profile Picture and Date -->
+                    @include('components.greeting_user')
+
+                    <!-- User Dashboard Content -->
+                    <div class="p-6 text-gray-900">
+                        <h2 class="text-xl font-semibold mb-4">Dashboard User</h2>
+                        <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
+
+                        <!-- Logout Button -->
+                        <form method="POST" action="{{ route('auth.logout') }}" class="mt-6">
+                            @csrf
+                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                {{ __('Logout') }}
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

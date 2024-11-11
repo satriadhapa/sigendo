@@ -20,8 +20,8 @@
            class="p-3 rounded-full {{ request()->routeIs('admin.programstudi') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Program Studi
         </a>
-        <a href="#"
-           class="p-3 rounded-full {{ request()->is('dosen') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
+        <a href="{{route('admin.lecturers.index')}}"
+           class="p-3 rounded-full {{ request()->routeIs('admin.lecturers.index') ? 'bg-pink-900 text-white' : 'hover:bg-pink-900' }} text-center">
             Dosen
         </a>
         <a href="{{route('admin.matakuliah')}}"

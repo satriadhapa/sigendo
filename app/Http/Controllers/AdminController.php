@@ -8,9 +8,16 @@ use App\Models\ProgramStudi;
 use App\Models\MataKuliah;
 use App\Models\Ruangan;
 use App\Models\JamKuliah;
+use App\Models\User;
 
 class AdminController extends Controller
 {
+        // Fetch list of lecturers
+    public function indexLecturers()
+    {
+        $lecturers = User::paginate(5); // Adjust role field if different
+        return view('lecturersadmin', compact('lecturers'));
+    }
     public function index()
     {
         return view('admin.dashboard');
