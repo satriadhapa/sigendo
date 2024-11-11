@@ -15,7 +15,7 @@ class AdminController extends Controller
         // Fetch list of lecturers
     public function indexLecturers()
     {
-        $lecturers = User::paginate(5); // Adjust role field if different
+        $lecturers = User::with('programStudi')->paginate(5); // Adjust role field if different
         return view('lecturersadmin', compact('lecturers'));
     }
     public function index()

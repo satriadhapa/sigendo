@@ -62,6 +62,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
 Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard.index');
     Route::get('/user/profile', [UserController::class, 'showProfile'])->name('user.profile');
+    Route::get('/user/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
+    Route::post('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
 
 });
 

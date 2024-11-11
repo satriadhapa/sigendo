@@ -38,7 +38,7 @@
                                             <td class="py-2 px-4 text-center">{{ $lecturer->name }}</td>
                                             <td class="py-2 px-4 text-center">{{ $lecturer->nomor_induk_pegawai }}</td>
                                             <td class="py-2 px-4 text-center">{{ $lecturer->jabatan_akademik }}</td>
-                                            <td class="py-2 px-4 text-center">{{ $lecturer->program_studi }}</td>
+                                            <td class="py-2 px-4 text-center">{{ $lecturer->programStudi->name ?? 'Tidak ada data' }}</td>
                                             <td class="py-2 px-4 text-center">{{ $lecturer->email }}</td>
                                         </tr>
                                     @endforeach

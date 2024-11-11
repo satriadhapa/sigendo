@@ -38,6 +38,13 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <!-- Edit Profile Button -->
+                        <div class="mt-6 text-center">
+                            <a href="{{ route('user.profile.edit') }}" class="bg-pink-800 hover:bg-pink-900 text-white font-semibold py-2 px-4 rounded">
+                                Edit Profile
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

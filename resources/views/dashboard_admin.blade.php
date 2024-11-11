@@ -52,15 +52,15 @@
                         <div class="custom-grid">
                             <div class="custom-card">
                                 <h2 class="text-xl font-semibold text-gray-700">Jumlah Mata Kuliah</h2>
-                                <p class="text-4xl font-bold text-gray-800">45</p>
+                                <p class="text-4xl font-bold text-gray-800">{{ $mataKuliahCount }}</p>
                             </div>
                             <div class="custom-card">
                                 <h2 class="text-xl font-semibold text-gray-700">Jumlah Dosen</h2>
-                                <p class="text-4xl font-bold text-gray-800">25</p>
+                                <p class="text-4xl font-bold text-gray-800">{{ $dosenCount }}</p>
                             </div>
                             <div class="custom-card">
                                 <h2 class="text-xl font-semibold text-gray-700">Jumlah Ruangan</h2>
-                                <p class="text-4xl font-bold text-gray-800">12</p>
+                                <p class="text-4xl font-bold text-gray-800">{{ $ruanganCount }}</p>
                             </div>
                             <div class="custom-card">
                                 <h2 class="text-xl font-semibold text-gray-700">Jumlah Program Studi</h2>
