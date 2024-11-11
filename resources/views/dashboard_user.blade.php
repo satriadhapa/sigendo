@@ -12,16 +12,7 @@
 
                     <!-- User Dashboard Content -->
                     <div class="p-6 text-gray-900">
-                        <h2 class="text-xl font-semibold mb-4">Dashboard User</h2>
                         <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
-
-                        <!-- Logout Button -->
-                        <form method="POST" action="{{ route('auth.logout') }}" class="mt-6">
-                            @csrf
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                {{ __('Logout') }}
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>

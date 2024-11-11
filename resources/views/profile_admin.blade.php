@@ -43,7 +43,7 @@
 
                         <!-- Button to Open Edit Profile Modal -->
                         <div class="text-center mt-6">
-                            <button onclick="openModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <button onclick="openModal()" class="bg-pink-800 hover:bg-pink-900 text-white font-bold py-2 px-4 rounded">
                                 Edit Profile
                             </button>
                         </div>
@@ -89,7 +89,7 @@
                                         <button type="button" onclick="closeModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">
                                             Cancel
                                         </button>
-                                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        <button type="submit" class="bg-pink-800 hover:bg-pink-900 text-white font-bold py-2 px-4 rounded">
                                             Save Changes
                                         </button>
                                     </div>

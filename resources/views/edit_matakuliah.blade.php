@@ -67,7 +67,7 @@
 
                                 <!-- Submit Button -->
                                 <div class="mt-6">
-                                    <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700">
+                                    <button type="submit" class="bg-pink-800 text-white font-semibold py-2 px-4 rounded hover:bg-pink-900">
                                         Update Mata Kuliah
                                     </button>
                                 </div>

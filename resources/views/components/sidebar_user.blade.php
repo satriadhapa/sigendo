@@ -1,5 +1,5 @@
 <!-- resources/views/components/sidebar.blade.php -->
-<div class="bg-gray-400 text-black w-64 p-6 flex flex-col mr-5">
+<div class="bg-gray-400 text-black w-64 p-6 flex flex-col mr-5 ro">
     <!-- Logo Section -->
     <div class="flex items-center mb-8">
         <a href=""><img src="{{ URL('storage/nusaputra.png') }}" alt="Logo" class="h-11 w-11 mr-4 rounded"></a>

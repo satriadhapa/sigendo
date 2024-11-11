@@ -12,7 +12,7 @@
 
                     <!-- Profile Content -->
                     <div class="p-6 text-gray-900">
-                        <h2 class="text-xl font-semibold mb-4">Profil User</h2>
+                        <h2 class="text-xl font-semibold mb-4 text-center">Profil User</h2>
                         
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg">
                             <tbody>
@@ -26,11 +26,11 @@
                                 </tr>
                                 <tr>
                                     <td class="py-2 px-4 border-b font-semibold">Nomor Induk Pegawai</td>
-                                    <td class="py-2 px-4 border-b">{{ $user->nomor_induk_pegawai }}</td>
+                                    <td class="py-2 px-4 border-b">{{ $user->nomor_induk_pegawai ?? 'Tidak ada data'}}</td>
                                 </tr>
                                 <tr>
                                     <td class="py-2 px-4 border-b font-semibold">Jabatan Akademik</td>
-                                    <td class="py-2 px-4 border-b">{{ $user->jabatan_akademik }}</td>
+                                    <td class="py-2 px-4 border-b">{{ $user->jabatan_akademik ?? 'Tidak ada data'}}</td>
                                 </tr>
                                 <tr>
                                     <td class="py-2 px-4 border-b font-semibold">Program Studi</td>
