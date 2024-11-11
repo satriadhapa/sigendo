@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ProgramStudi;
 use App\Models\MataKuliah;
 use App\Models\Ruangan;
+use App\Models\JamKuliah;
 
 class AdminController extends Controller
 {
@@ -238,5 +239,62 @@ class AdminController extends Controller
         $room = Ruangan::findOrFail($id);
         $room->delete();
         return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil dihapus.');
+    }
+
+    
+    // Display list of Jam Kuliah (Lecture Hours)
+    public function indexJamKuliah()
+    {
+        $lectureHours = JamKuliah::paginate(5); // Adjust pagination as needed
+        return view('jamkuliah_admin', compact('lectureHours'));
+    }
+
+    // Show form to create a new Jam Kuliah
+    public function createJamKuliah()
+    {
+        return view('create_jam_kuliah');
+    }
+
+    public function storeJamKuliah(Request $request)
+    {
+        $request->validate([
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+        ]);
+
+        JamKuliah::create($request->only(['start_time', 'end_time']));
+        return redirect()->route('admin.jamkuliah.index')->with('success', 'Jam Kuliah berhasil ditambahkan.');
+    }
+
+    // Show form to edit an existing Jam Kuliah
+    public function editJamKuliah($id)
+    {
+        $lectureHour = JamKuliah::findOrFail($id);
+        return view('edit_jam_kuliah', compact('lectureHour'));
+    }
+
+    // Update an existing Jam Kuliah in the database
+    // Update an existing Jam Kuliah in the database
+    public function updateJamKuliah(Request $request, $id)
+    {
+        $request->validate([
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+        ]);
+
+        $lectureHour = JamKuliah::findOrFail($id);
+
+        // Check if data is received correctly
+        $lectureHour->update($request->only(['start_time', 'end_time']));
+        
+        return redirect()->route('admin.jamkuliah.index')->with('success', 'Jam Kuliah berhasil diperbarui.');
+    }
+
+    // Delete a Jam Kuliah from the database
+    public function destroyJamKuliah($id)
+    {
+        $lectureHour = JamKuliah::findOrFail($id);
+        $lectureHour->delete();
+        return redirect()->route('admin.jamkuliah.index')->with('success', 'Jam Kuliah berhasil dihapus.');
     }
 }

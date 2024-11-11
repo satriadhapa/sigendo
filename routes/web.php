@@ -9,6 +9,10 @@ Route::get('/', [AuthController::class, 'index'])->name('auth.index');
 Route::post('/auth/verify', [AuthController::class, 'verify'])->name('auth.verify');
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
+# route untuk register akun
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
+Route::post('/register', [AuthController::class, 'register'])->name('auth.register.store');
+
 Route::group(['middleware' => 'auth:admin'], function () {
     # Route Dashboard Admin
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard.index');
@@ -40,12 +44,18 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/ruangan/{id}/edit', [AdminController::class, 'editRuangan'])->name('admin.ruangan.edit');
     Route::put('/ruangan/{id}', [AdminController::class, 'updateRuangan'])->name('admin.ruangan.update');
     Route::delete('/ruangan/{id}', [AdminController::class, 'destroyRuangan'])->name('admin.ruangan.destroy');
+
+    # Route Jam Kuliah
+    Route::get('/admin/jamkuliah', [AdminController::class, 'indexJamKuliah'])->name('admin.jamkuliah.index');
+    Route::get('/admin/jamkuliah/create', [AdminController::class, 'createJamKuliah'])->name('admin.jamkuliah.create');
+    Route::post('/admin/jamkuliah/store', [AdminController::class, 'storeJamKuliah'])->name('admin.jamkuliah.store');
+    Route::get('/admin/jamkuliah/{id}/edit', [AdminController::class, 'editJamKuliah'])->name('admin.jamkuliah.edit');
+    Route::put('/admin/jamkuliah/{id}', [AdminController::class, 'updateJamKuliah'])->name('admin.jamkuliah.update');
+    Route::delete('/admin/jamkuliah/{id}', [AdminController::class, 'destroyJamKuliah'])->name('admin.jamkuliah.destroy');
+
 });
 
 Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard.index');
 });
 
-# route untuk register akun
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register.store');
