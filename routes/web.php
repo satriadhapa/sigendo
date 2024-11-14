@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthController::class, 'index'])->name('auth.index');
@@ -60,10 +61,14 @@ Route::group(['middleware' => 'auth:admin'], function () {
 });
 
 Route::group(['middleware' => 'auth:user'], function () {
-    Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard.index');
+    Route::get('/user/dashboard', [DashboardController::class, ['user', 'showScheduleForm']])->name('user.dashboard.index');
+    Route::get('/user/dashboard', [DashboardController::class, 'showScheduleForm'])->name('user.dashboard.index');
+    // Route::get('/user/dashboard', [UserController::class, 'showScheduleForm'])->name('user.dashboard.index');
     Route::get('/user/profile', [UserController::class, 'showProfile'])->name('user.profile');
     Route::get('/user/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
     Route::post('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
+
+    Route::post('/generate-schedule', [ScheduleController::class, 'generateSchedule'])->name('generate.schedule');
 
 });
 

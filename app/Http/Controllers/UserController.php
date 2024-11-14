@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProgramStudi;
+use App\Models\MataKuliah;
+use App\Models\Ruangan;
+use App\Models\JamKuliah;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    
+    
     public function showProfile()
     {
         $user = Auth::user();
