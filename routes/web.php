@@ -68,7 +68,10 @@ Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/user/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
     Route::post('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
 
-    Route::post('/generate-schedule', [ScheduleController::class, 'generateSchedule'])->name('generate.schedule');
+    // Schedule generation routes
+    Route::post('/generate-schedule', [ScheduleController::class, 'generate'])->name('schedule.generate');
+    Route::get('/schedule-result', [ScheduleController::class, 'showGeneratedSchedule'])->name('schedule.result');
+
 
 });
 

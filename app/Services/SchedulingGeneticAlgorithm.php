@@ -19,10 +19,9 @@ class SchedulingGeneticAlgorithm
     protected $batchYears;
     protected $startDate;
     protected $scheduleDuration;
-
     protected $population;
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->populationSize = $data['jumlah_populasi'];
         $this->crossoverProbability = $data['probabilitas_cross_over'];
@@ -43,7 +42,7 @@ class SchedulingGeneticAlgorithm
     /**
      * Generate the schedule using genetic algorithm steps.
      */
-    public function generateSchedule()
+    public function generateSchedule(): array
     {
         $this->initializePopulation();
 
@@ -60,7 +59,7 @@ class SchedulingGeneticAlgorithm
     /**
      * Initialize the population randomly.
      */
-    protected function initializePopulation()
+    protected function initializePopulation(): void
     {
         for ($i = 0; $i < $this->populationSize; $i++) {
             $individual = $this->createRandomSchedule();
@@ -71,7 +70,7 @@ class SchedulingGeneticAlgorithm
     /**
      * Create a random schedule (individual).
      */
-    protected function createRandomSchedule()
+    protected function createRandomSchedule(): array
     {
         $schedule = [];
         foreach ($this->classCount as $class) {
@@ -92,7 +91,7 @@ class SchedulingGeneticAlgorithm
     /**
      * Evaluate the fitness of each individual in the population.
      */
-    protected function evaluateFitness()
+    protected function evaluateFitness(): void
     {
         foreach ($this->population as &$individual) {
             $individual['fitness'] = $this->calculateFitness($individual);
@@ -102,34 +101,34 @@ class SchedulingGeneticAlgorithm
     /**
      * Calculate fitness based on scheduling constraints.
      */
-    protected function calculateFitness($schedule)
+    protected function calculateFitness(array $schedule): int
     {
         $fitness = 0;
-        // Check for constraints, such as no overlapping schedules or room availability.
+        
+        // Placeholder: Example constraints for fitness calculation
         foreach ($schedule as $event) {
-            // Adjust fitness score based on constraints
-            $fitness += 1;  // This is a placeholder
+            $fitness += 1;  // Adjust fitness calculation here based on real constraints
         }
+        
         return $fitness;
     }
 
     /**
      * Selection of individuals for reproduction.
      */
-    protected function selection()
+    protected function selection(): void
     {
-        // Use a selection method like roulette wheel or tournament selection
-        $this->population = $this->population->sortByDesc('fitness')->take($this->populationSize / 2);
+        $this->population = $this->population->sortByDesc('fitness')->take(intval($this->populationSize / 2));
     }
 
     /**
      * Perform crossover on selected individuals.
      */
-    protected function crossover()
+    protected function crossover(): void
     {
         $offspring = new Collection();
         foreach ($this->population->chunk(2) as $parents) {
-            if (rand(0, 100) / 100 <= $this->crossoverProbability) {
+            if (rand(0, 100) / 100 <= $this->crossoverProbability && count($parents) == 2) {
                 $child1 = $this->crossoverIndividuals($parents[0], $parents[1]);
                 $child2 = $this->crossoverIndividuals($parents[1], $parents[0]);
                 $offspring->push($child1, $child2);
@@ -141,7 +140,7 @@ class SchedulingGeneticAlgorithm
     /**
      * Perform mutation on individuals.
      */
-    protected function mutate()
+    protected function mutate(): void
     {
         foreach ($this->population as &$individual) {
             if (rand(0, 100) / 100 <= $this->mutationProbability) {
@@ -153,17 +152,16 @@ class SchedulingGeneticAlgorithm
     /**
      * Perform crossover between two individuals.
      */
-    protected function crossoverIndividuals($parent1, $parent2)
+    protected function crossoverIndividuals(array $parent1, array $parent2): array
     {
         $crossoverPoint = rand(1, count($parent1) - 1);
-        $child = array_merge(array_slice($parent1, 0, $crossoverPoint), array_slice($parent2, $crossoverPoint));
-        return $child;
+        return array_merge(array_slice($parent1, 0, $crossoverPoint), array_slice($parent2, $crossoverPoint));
     }
 
     /**
      * Mutate an individual by randomly changing one of its properties.
      */
-    protected function mutateIndividual(&$individual)
+    protected function mutateIndividual(array &$individual): void
     {
         $index = array_rand($individual);
         $individual[$index]['day'] = $this->teachingDays[array_rand($this->teachingDays)];
@@ -172,7 +170,7 @@ class SchedulingGeneticAlgorithm
     /**
      * Get the best schedule from the population.
      */
-    protected function getBestSchedule()
+    protected function getBestSchedule(): array
     {
         return $this->population->sortByDesc('fitness')->first();
     }

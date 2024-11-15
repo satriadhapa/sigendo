@@ -11,11 +11,11 @@ use App\Models\Ruangan;
 class ScheduleController extends Controller
 {
     /**
-     * Show the schedule generation form.
+     * Display the schedule generation form.
      */
     public function index()
     {
-        // Fetch data for the form
+        // Fetch data needed for the form
         $mataKuliahs = MataKuliah::all();
         $jamKuliahs = JamKuliah::all();
         $ruangans = Ruangan::all();
@@ -26,9 +26,10 @@ class ScheduleController extends Controller
     /**
      * Generate the schedule using a genetic algorithm.
      */
-    public function generateSchedule(Request $request)
-    {
-        // Validate the form inputs
+    public function generate(Request $request)
+    {   
+        
+        // Validate form input
         $validatedData = $request->validate([
             'probabilitas_cross_over' => 'required|numeric|min:0|max:1',
             'jumlah_populasi' => 'required|integer|min:1',
@@ -37,20 +38,17 @@ class ScheduleController extends Controller
             'jumlah_kelas' => 'required|string',
             'mata_kuliah' => 'required|array|max:3',
             'hari_mengajar' => 'required|array',
+            'tanggal_mulai' => 'required|date',
             'jam_kuliah' => 'required|array',
             'ruangan' => 'required|array',
-            'angkatan' => 'required|array',
-            'tanggal_mulai' => 'required|date',
-            'durasi_jadwal' => 'required|integer|min:1'
+            'angkatan' => 'required|string',
+            'durasi_jadwal' => 'required|integer|min:1',
         ]);
 
-        // Initialize the genetic algorithm service with the validated data
-        $algorithm = new SchedulingGeneticAlgorithm($validatedData);
-        
-        // Generate the schedule
-        $schedule = $algorithm->generateSchedule();
-
-        // Pass the generated schedule to the view for display
-        return view('dashboard_user.schedule', compact('schedule'));
+        // Initialize and run the scheduling genetic algorithm
+        $scheduleService = new SchedulingGeneticAlgorithm($validatedData);
+        $generatedSchedule = $scheduleService->generateSchedule();
+        // Pass the generated schedule to the result view
+        return view('result', compact('generatedSchedule'));
     }
 }

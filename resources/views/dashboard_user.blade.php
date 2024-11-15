@@ -15,7 +15,7 @@
                         <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
 
                         <!-- Schedule Generation Form with Dummy Data -->
-                        <form action="" method="POST" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <form action="{{ route('schedule.generate') }}" method="POST" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
                             @csrf
                             <!-- Probabilitas Cross Over -->
                             <div>
@@ -159,6 +159,7 @@
                                 </button>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
             </div>

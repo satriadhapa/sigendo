@@ -1,30 +1,35 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
-use App\Models\ProgramStudi;
-use App\Models\MataKuliah;
-use App\Models\Ruangan;
-use App\Models\JamKuliah;
 use Illuminate\Http\Request;
+use App\Models\ProgramStudi;
 
 class UserController extends Controller
 {
-    
-    
+    /**
+     * Show user profile.
+     */
     public function showProfile()
     {
         $user = Auth::user();
         return view('profil_user', compact('user'));
     }
+
+    /**
+     * Show edit profile form.
+     */
     public function editProfile()
     {
         $user = Auth::user();
         $program_studi = ProgramStudi::all(); // Fetch all Program Studi records
         return view('edit_profiluser', compact('user', 'program_studi'));
-
     }
 
+    /**
+     * Update user profile.
+     */
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -43,5 +48,4 @@ class UserController extends Controller
 
         return redirect()->route('user.profile')->with('success', 'Profile updated successfully.');
     }
-
 }
