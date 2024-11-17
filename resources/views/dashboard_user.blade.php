@@ -114,7 +114,7 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                <small class="text-gray-600">Pilih jam yang tidak memungkinkan mengajar.</small>
+                                <small class="text-gray-600">Pilih jam yang memungkinkan mengajar.</small>
                             </div>
 
                             <!-- Ruangan (Dynamic) -->
@@ -127,24 +127,6 @@
                                 </div>
                             </div>
 
-                            <!-- Angkatan -->
-                            <div>
-                                <label class="block font-medium">Angkatan</label>
-                                <div class="mt-1 space-y-2">
-                                    <div>
-                                        <input type="checkbox" name="angkatan" id="angkatan_21" value="21" class="mr-2" required>
-                                        <label for="angkatan_21">21</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="angkatan" id="angkatan_22" value="22" class="mr-2" required>
-                                        <label for="angkatan_22">22</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="angkatan" id="angkatan_23" value="23" class="mr-2" required>
-                                        <label for="angkatan_23">23</label>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Durasi Jadwal -->
                             <div>

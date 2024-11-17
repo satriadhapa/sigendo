@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
+use App\Exports\ScheduleExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/', [AuthController::class, 'index'])->name('auth.index');
 Route::post('/auth/verify', [AuthController::class, 'verify'])->name('auth.verify');
@@ -72,6 +74,12 @@ Route::group(['middleware' => 'auth:user'], function () {
     Route::post('/generate-schedule', [ScheduleController::class, 'generate'])->name('schedule.generate');
     Route::get('/schedule-result', [ScheduleController::class, 'showGeneratedSchedule'])->name('schedule.result');
 
-
+    // Schedule export routes
+    Route::get('/export-schedule', function () {
+        // Data schedule diambil dari database atau service
+        $schedule = session('schedule', []);
+    
+        return Excel::download(new ScheduleExport($schedule), 'jadwal.xlsx');
+    })->name('export.schedule');
 });
 
