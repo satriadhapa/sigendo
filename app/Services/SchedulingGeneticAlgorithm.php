@@ -9,6 +9,7 @@ class SchedulingGeneticAlgorithm
     protected $params;
     protected $population = [];
     protected $scheduleDuration;
+    protected $daysPerWeek = 2; // Batas jumlah hari mengajar per minggu
 
     public function __construct($params)
     {
@@ -16,22 +17,19 @@ class SchedulingGeneticAlgorithm
         $this->params = $params;
         $this->scheduleDuration = $this->calculateScheduleDates(
             $params['tanggal_mulai'],
-            $params['durasi_jadwal'],
-            $params['hari_mengajar']
+            $params['durasi_jadwal']
         );
     }
 
-    // Generate schedule dates based on selected days and duration
-    protected function calculateScheduleDates($startDate, $durationMonths, $allowedDays)
+    // Generate schedule dates based on duration
+    protected function calculateScheduleDates($startDate, $durationMonths)
     {
         $dates = [];
         $start = Carbon::parse($startDate);
         $end = $start->copy()->addMonths($durationMonths);
 
         while ($start->lte($end)) {
-            if (in_array($start->locale('id')->dayName, $allowedDays)) {
-                $dates[] = $start->format('Y-m-d');
-            }
+            $dates[] = $start->format('Y-m-d');
             $start->addDay();
         }
 
@@ -41,30 +39,48 @@ class SchedulingGeneticAlgorithm
     // Initialize population
     protected function initializePopulation($populationSize)
     {
-        $baseSchedule = $this->createRandomSchedule();
-
         for ($i = 0; $i < $populationSize; $i++) {
-            $this->population[] = $this->performMutation($baseSchedule, $this->params['probabilitas_mutasi']);
+            $this->population[] = $this->createRandomSchedule();
         }
     }
 
-    // Create random schedule
+    // Create random schedule with weekly teaching day limits
     protected function createRandomSchedule()
     {
         $schedule = [];
+        $usedSlots = []; // Untuk melacak slot waktu yang telah digunakan
+        $weeklyTeachingDays = []; // Melacak jumlah hari mengajar per minggu
 
         foreach ($this->scheduleDuration as $tanggal) {
+            $week = Carbon::parse($tanggal)->weekOfYear;
+
             foreach ($this->params['mata_kuliah'] as $mataKuliah) {
                 foreach ($this->params['jam_kuliah'] as $jam) {
                     $kelas = $this->getRandomElement(explode(',', $this->params['jumlah_kelas']));
+                    $ruangan = $this->getRandomElement($this->params['ruangan']);
 
-                    $schedule[] = [
-                        'tanggal' => $tanggal,
-                        'hari' => Carbon::parse($tanggal)->locale('id')->dayName,
-                        'jam' => $jam,
-                        'mata_kuliah' => $mataKuliah,
-                        'kelas' => $kelas,
-                    ];
+                    $slot = "$tanggal-$jam-$ruangan"; // Identifikasi slot waktu dan ruangan
+
+                    // Pastikan jumlah hari mengajar per minggu <= 2
+                    if (!isset($weeklyTeachingDays[$mataKuliah][$week])) {
+                        $weeklyTeachingDays[$mataKuliah][$week] = 0;
+                    }
+
+                    if ($weeklyTeachingDays[$mataKuliah][$week] < $this->daysPerWeek &&
+                        !isset($usedSlots[$slot])) {
+                        // Tambahkan jadwal jika slot belum digunakan
+                        $schedule[] = [
+                            'tanggal' => $tanggal,
+                            'jam' => $jam,
+                            'mata_kuliah' => $mataKuliah,
+                            'kelas' => $kelas,
+                            'ruangan' => $ruangan,
+                        ];
+
+                        // Tandai slot dan update jumlah hari
+                        $usedSlots[$slot] = true;
+                        $weeklyTeachingDays[$mataKuliah][$week]++;
+                    }
                 }
             }
         }
@@ -76,16 +92,39 @@ class SchedulingGeneticAlgorithm
     protected function evaluateFitness($schedule)
     {
         $penalty = 0;
+        $usedSlots = []; // Untuk memeriksa konflik waktu dan ruangan
+        $weeklyTeachingDays = []; // Melacak jumlah hari mengajar per minggu
 
-        foreach ($schedule as $index => $entry) {
-            foreach ($schedule as $compareIndex => $compareEntry) {
-                if ($index !== $compareIndex && $entry['tanggal'] === $compareEntry['tanggal'] && $entry['jam'] === $compareEntry['jam']) {
-                    $penalty++;
-                }
+        foreach ($schedule as $entry) {
+            $slot = "{$entry['tanggal']}-{$entry['jam']}-{$entry['ruangan']}";
+            $teacherSlot = "{$entry['tanggal']}-{$entry['jam']}-{$entry['mata_kuliah']}";
+            $week = Carbon::parse($entry['tanggal'])->weekOfYear;
+
+            // Periksa konflik ruangan
+            if (isset($usedSlots[$slot])) {
+                $penalty++;
             }
+
+            // Periksa konflik dosen (mengajar lebih dari satu mata kuliah di waktu yang sama)
+            if (isset($usedSlots[$teacherSlot])) {
+                $penalty++;
+            }
+
+            // Periksa batas hari mengajar per minggu
+            if (!isset($weeklyTeachingDays[$entry['mata_kuliah']][$week])) {
+                $weeklyTeachingDays[$entry['mata_kuliah']][$week] = 0;
+            }
+            $weeklyTeachingDays[$entry['mata_kuliah']][$week]++;
+
+            if ($weeklyTeachingDays[$entry['mata_kuliah']][$week] > $this->daysPerWeek) {
+                $penalty++;
+            }
+
+            $usedSlots[$slot] = true;
+            $usedSlots[$teacherSlot] = true;
         }
 
-        return 1 / (1 + $penalty);
+        return 1 / (1 + $penalty); // Nilai fitness semakin tinggi jika penalty kecil
     }
 
     // Perform crossover
@@ -102,6 +141,7 @@ class SchedulingGeneticAlgorithm
             if (rand(0, 100) / 100 <= $mutationProbability) {
                 $entry['tanggal'] = $this->getRandomElement($this->scheduleDuration);
                 $entry['jam'] = $this->getRandomElement($this->params['jam_kuliah']);
+                $entry['ruangan'] = $this->getRandomElement($this->params['ruangan']);
             }
         }
 
@@ -117,7 +157,7 @@ class SchedulingGeneticAlgorithm
     // Run the genetic algorithm
     public function run()
     {
-        set_time_limit(2000); 
+        set_time_limit(2000);
         $this->initializePopulation($this->params['jumlah_populasi']);
 
         for ($generation = 0; $generation < $this->params['jumlah_generasi']; $generation++) {
@@ -165,10 +205,10 @@ class SchedulingGeneticAlgorithm
         $bestIndex = array_keys($fitnessScores, max($fitnessScores))[0];
         $bestSchedule = $this->population[$bestIndex];
 
-    // Urutkan jadwal berdasarkan tanggal
-    usort($bestSchedule, function ($a, $b) {
-        return strtotime($a['tanggal']) - strtotime($b['tanggal']);
-    });
+        // Urutkan jadwal berdasarkan tanggal
+        usort($bestSchedule, function ($a, $b) {
+            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
+        });
 
         return $bestSchedule;
     }

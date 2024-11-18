@@ -61,42 +61,6 @@
                                 <small class="text-gray-600">Maksimal memilih 3 mata kuliah.</small>
                             </div>
 
-                            <!-- Hari Mengajar -->
-                            <div>
-                                <label class="block font-medium">Hari Mengajar</label>
-                                <div class="mt-1 space-y-2">
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_senin" value="Senin" class="mr-2">
-                                        <label for="hari_senin">Senin</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_selasa" value="Selasa" class="mr-2">
-                                        <label for="hari_selasa">Selasa</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_rabu" value="Rabu" class="mr-2">
-                                        <label for="hari_rabu">Rabu</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_kamis" value="Kamis" class="mr-2">
-                                        <label for="hari_kamis">Kamis</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_jumat" value="Jumat" class="mr-2">
-                                        <label for="hari_jumat">Jumat</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_sabtu" value="Sabtu" class="mr-2">
-                                        <label for="hari_sabtu">Sabtu</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" name="hari_mengajar[]" id="hari_minggu" value="Minggu" class="mr-2">
-                                        <label for="hari_minggu">Minggu</label>
-                                    </div>
-                                </div>
-                                <small class="text-gray-600">Pilih hari-hari mengajar yang diinginkan.</small>
-                            </div>
-
                             <!-- Tanggal Mulai (Start Date for Scheduling) -->
                             <div>
                                 <label for="tanggal_mulai" class="block font-medium">Tanggal Mulai</label>
@@ -122,11 +86,20 @@
                                 <label class="block font-medium">Ruangan</label>
                                 <div class="border border-gray-300 rounded-lg mt-1 p-4">
                                     @foreach($ruangans as $ruangan)
-                                        <p class="text-gray-700">{{ $ruangan->name }}</p>
+                                        <div class="flex items-center mb-2">
+                                            <input 
+                                                type="checkbox" 
+                                                id="ruangan_{{ $ruangan->id }}" 
+                                                name="ruangan[]" 
+                                                value="{{ $ruangan->id }}" 
+                                                class="mr-2">
+                                            <label for="ruangan_{{ $ruangan->id }}" class="text-gray-700">
+                                                {{ $ruangan->name }}
+                                            </label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
-
 
                             <!-- Durasi Jadwal -->
                             <div>

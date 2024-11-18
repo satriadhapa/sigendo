@@ -9,7 +9,7 @@
                 <img src="{{ asset('default-avatar.png') }}" alt="Default Avatar" class="w-32 h-32 rounded-full object-cover">
             @endif
             <div>
-                <p class="text-2xl font-semibold">{{ __("Hey, " . Auth::user()->name) }}</p>
+                <p class="text-2xl font-semibold">{{ __("Hallo, " . Auth::user()->name) }}</p>
                 <p class="text-gray-600">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
             </div>
         </div>

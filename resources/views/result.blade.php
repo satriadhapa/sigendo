@@ -1,4 +1,4 @@
-<x-app-layout> 
+<x-app-layout>
     <div class="flex min-h-screen">
         <!-- Sidebar Component -->
         @include('components.sidebar_user')
@@ -13,39 +13,46 @@
                     <!-- User Dashboard Content -->
                     <div class="p-6 text-gray-900">
                         <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
-
+                        <br>
                         <!-- Tombol Export -->
                         <div class="mb-4">
                             <a href="{{ route('export.schedule') }}" 
-                            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                               class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                                 Export to Excel
                             </a>
                         </div>
-                        <table class="table-auto w-full border-collapse border border-gray-300">
-                            <thead>
-                                <tr>
-                                    <th class="border border-gray-300 px-4 py-2">No</th>
-                                    <th class="border border-gray-300 px-4 py-2">Tanggal</th>
-                                    <th class="border border-gray-300 px-4 py-2">Hari</th>
-                                    <th class="border border-gray-300 px-4 py-2">Jam</th>
-                                    <th class="border border-gray-300 px-4 py-2">Kuliah</th>
-                                    <th class="border border-gray-300 px-4 py-2">Kelas</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($schedule as $index => $entry)
+
+                        <!-- Tabel Hasil Jadwal -->
+                        <div class="overflow-x-auto">
+                            <table class="table-auto w-full border-collapse border border-gray-300">
+                                <thead class="bg-gray-100">
                                     <tr>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $index + 1 }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $entry['tanggal'] }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $entry['hari'] }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $entry['jam'] }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $entry['mata_kuliah'] }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $entry['kelas'] }}</td>
+                                        <th class="border border-gray-300 px-4 py-2">No</th>
+                                        <th class="border border-gray-300 px-4 py-2">Tanggal</th>
+                                        <th class="border border-gray-300 px-4 py-2">Jam</th>
+                                        <th class="border border-gray-300 px-4 py-2">Mata Kuliah</th>
+                                        <th class="border border-gray-300 px-4 py-2">Ruangan</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        
+                                </thead>
+                                <tbody>
+                                    @forelse ($mappedSchedule as $index => $entry)
+                                        <tr class="{{ $loop->odd ? 'bg-gray-50' : 'bg-white' }}">
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ $index + 1 }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['tanggal'] }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['jam'] }}</td>
+                                            <td class="border border-gray-300 px-4 py-2">{{ $entry['mata_kuliah'] }} - {{ $entry['kelas'] }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['ruangan'] }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="border border-gray-300 px-4 py-2 text-center">
+                                                Tidak ada jadwal yang ditemukan.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
