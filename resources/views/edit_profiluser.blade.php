@@ -14,9 +14,12 @@
                     <div class="p-6 text-gray-900">
                         <h2 class="text-xl font-semibold mb-4">Edit Profil User</h2>
 
-                        <form action="{{ route('user.profile.update') }}" method="POST">
+                        <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-
+                            <div class="mb-3">
+                                <label>upload file image</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
                             <!-- Name Field -->
                             <div class="mb-4">
                                 <label for="name" class="block text-gray-700 font-semibold mb-2">Nama</label>
@@ -55,7 +58,7 @@
 
                             <!-- Submit Button -->
                             <div class="mt-6">
-                                <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700">
+                                <button type="submit" class="bg-pink-800 text-white font-semibold py-2 px-4 rounded hover:bg-pink-900">
                                     Update Profile
                                 </button>
                             </div>

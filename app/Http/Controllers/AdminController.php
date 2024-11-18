@@ -39,8 +39,16 @@ class AdminController extends Controller
             'nomor_induk_pegawai' => 'nullable|string|max:50',
             'jabatan_akademik' => 'nullable|string|max:100',
             'program_studi_id' => 'nullable|exists:program_studi,id',
+            'avatar' => 'nullable|mimes:png,jpg,jpeg'
         ]);
+        if($request->has('avatar')){
+            $file = $request->file('avatar');
+            $extension = $file->getClientOriginalExtension();
 
+            $filename = time(). '.'. $extension;
+            $path = 'avatar/';
+            $file->move($path, $filename);
+        }
         $admin = Auth::user();
         $admin->update([
             'name' => $request->input('name'),
@@ -48,6 +56,7 @@ class AdminController extends Controller
             'nomor_induk_pegawai' => $request->input('nomor_induk_pegawai'),
             'jabatan_akademik' => $request->input('jabatan_akademik'),
             'program_studi_id' => $request->input('program_studi_id'),
+            'avatar' => $path.$filename
         ]);
 
         return redirect()->route('admin.profile')->with('success', 'Profile updated successfully.');

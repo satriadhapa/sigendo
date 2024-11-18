@@ -17,8 +17,16 @@
                         <div class="welcome-container">
                             <h1 class="welcome-heading">{{ __("Profile Information") }}</h1>
                         </div>
-                        
+                             <div class="flex justify-center">
+                                @if(Auth::user()->avatar)
+                                    <img src="{{ asset(Auth::user()->avatar) }}" alt="Avatar" class="w-32 h-32 rounded-full object-cover">
+                                @else
+                                    <img src="{{ asset('default-avatar.png') }}" alt="Default Avatar" class="w-32 h-32 rounded-full object-cover">
+                                @endif
+                            </div>   
+                             <br>
                         <div class="custom-grid">
+                    
                             <div class="custom-card">
                                 <h2 class="text-xl font-semibold text-gray-700">Nama</h2>
                                 <p class="text-2xl font-bold text-gray-800">{{ Auth::user()->name }}</p>
@@ -53,10 +61,13 @@
                             <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg relative">
                                 <h2 class="text-2xl font-semibold mb-6 text-center">{{ __("Edit Profile Information") }}</h2>
                                 
-                                <form action="{{ route('admin.profile.update') }}" method="POST" class="space-y-4">
+                                <form action="{{ route('admin.profile.update') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
-
+                                    <div class="mb-3">
+                                        <label for="">upload file image</label>
+                                        <input type="file" name="avatar" class="form-control">
+                                    </div>
                                     <div class="flex flex-col">
                                         <label for="name" class="text-lg font-semibold text-gray-700">Nama Lengkap</label>
                                         <input type="text" name="name" id="name" class="p-2 border border-gray-400 rounded" value="{{ Auth::user()->name }}">

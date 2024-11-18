@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     protected $table = 'users';
     protected $primaryKey = 'id';
-    protected $fillable = ['email', 'password', 'name', 'nomor_induk_pegawai', 'jabatan_akademik', 'program_studi_id'];
+    protected $fillable = ['email', 'password', 'name', 'nomor_induk_pegawai', 'jabatan_akademik', 'program_studi_id', 'image'];
 
     public function programStudi()
     {

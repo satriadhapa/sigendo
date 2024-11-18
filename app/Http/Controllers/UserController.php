@@ -41,10 +41,19 @@ class UserController extends Controller
             'nomor_induk_pegawai' => 'required|string|max:20',
             'jabatan_akademik' => 'required|string|max:100',
             'program_studi_id' => 'required|exists:program_studi,id',
+            'image' => 'nullable|mimes:png,jpg,jpeg'
         ]);
+        if($request->has('image')){
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+
+            $filename = time(). '.'. $extension;
+            $path = 'user/';
+            $file->move($path, $filename);
+        }
 
         // Update user data
-        $user->update($request->only(['name', 'email', 'nomor_induk_pegawai', 'jabatan_akademik', 'program_studi_id']));
+        $user->update($request->only(['name', 'email','image' => $path.$filename, 'nomor_induk_pegawai', 'jabatan_akademik', 'program_studi_id']));
 
         return redirect()->route('user.profile')->with('success', 'Profile updated successfully.');
     }

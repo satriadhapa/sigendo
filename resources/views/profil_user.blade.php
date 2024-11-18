@@ -13,7 +13,13 @@
                     <!-- Profile Content -->
                     <div class="p-6 text-gray-900">
                         <h2 class="text-xl font-semibold mb-4 text-center">Profil User</h2>
-                        
+                        <div class="flex justify-center">
+                                @if(Auth::user()->image)
+                                    <img src="{{ asset(Auth::user()->image) }}" alt="Avatar" class="w-32 h-32 rounded-full object-cover">
+                                @else
+                                    <img src="{{ asset('default-avatar.png') }}" alt="Default Avatar" class="w-32 h-32 rounded-full object-cover">
+                                @endif
+                            </div><br>
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg">
                             <tbody>
                                 <tr>

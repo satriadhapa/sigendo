@@ -1,9 +1,13 @@
-<!-- resources/views/components/greeting.blade.php -->
+<!-- resources/views/components/greeting_user.blade.php -->
 <div class="mb-6 text-gray-900">
     <div class="flex items-center justify-between">
         <!-- Left Section: Greeting and Profile Picture -->
         <div class="flex items-center space-x-4">
-            <img src="{{ URL('storage/nusaputra.png') }}" alt="Profile Photo" class="h-16 w-16 rounded">
+            @if(Auth::user()->image)
+                <img src="{{ asset(Auth::user()->image) }}" alt="Avatar" class="w-16 h-16 rounded-full">
+            @else
+                <img src="{{ asset('default-avatar.png') }}" alt="Default Avatar" class="w-32 h-32 rounded-full object-cover">
+            @endif
             <div>
                 <p class="text-2xl font-semibold">{{ __("Hey, " . Auth::user()->name) }}</p>
                 <p class="text-gray-600">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
