@@ -11,7 +11,7 @@
                     @include('components.greeting_user')
 
                     <!-- User Dashboard Content -->
-                    <div class="p-6 text-gray-900">
+                    <div class="p-6 text-gray-900 text-center font-bold">
                         <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
                         <br>
                         <!-- Tombol Export -->
@@ -19,6 +19,10 @@
                             <a href="{{ route('export.schedule') }}" 
                                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                                 Export to Excel
+                            </a>
+                            <a href="{{ route('user.dashboard.index') }}" 
+                               class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                                Buat Kembali Jadwal
                             </a>
                         </div>
 

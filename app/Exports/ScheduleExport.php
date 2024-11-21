@@ -7,26 +7,20 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ScheduleExport implements FromArray, WithHeadings
 {
-    protected $schedule;
+    protected $mappedSchedule;
 
-    public function __construct($schedule)
+    public function __construct(array $mappedSchedule)
     {
-        $this->schedule = $schedule;
+        $this->mappedSchedule = $mappedSchedule;
     }
 
     public function array(): array
     {
-        return $this->schedule;
+        return $this->mappedSchedule;
     }
 
     public function headings(): array
     {
-        return [
-            'Tanggal',
-            'Hari',
-            'Jam',
-            'Kuliah',
-            'Kelas',
-        ];
+        return ['Tanggal', 'Jam', 'Mata Kuliah', 'Kelas', 'Ruangan'];
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\MataKuliah;
 use App\Models\JamKuliah;
 use App\Models\Ruangan;
+use App\Exports\ScheduleExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ScheduleController extends Controller
 {
@@ -82,5 +84,32 @@ class ScheduleController extends Controller
         // Tampilkan hasil dengan mappedSchedule
         return view('result', compact('mappedSchedule'));
     }
-
+    /**
+     * Export jadwal ke Excel
+     */
+    public function export()
+    { 
+            // Retrieve the mapped schedule from session
+            $mappedSchedule = session('mappedSchedule', []);
+        
+            if (empty($mappedSchedule)) {
+                return back()->with('error', 'Tidak ada jadwal untuk diekspor.');
+            }
+        
+            // Prepare the data for export
+            $exportData = [];
+            foreach ($mappedSchedule as $entry) {
+                $exportData[] = [
+                    'Tanggal' => $entry['tanggal'],
+                    'Jam' => $entry['jam'],
+                    'Mata Kuliah' => $entry['mata_kuliah'],
+                    'Kelas' => $entry['kelas'],
+                    'Ruangan' => $entry['ruangan'],
+                ];
+            }
+        
+            // Export the schedule to Excel
+            return Excel::download(new ScheduleExport($exportData), 'jadwal.xlsx');
+        }
+        
 }

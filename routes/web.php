@@ -65,7 +65,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
 Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/user/dashboard', [DashboardController::class, ['user', 'showScheduleForm']])->name('user.dashboard.index');
     Route::get('/user/dashboard', [DashboardController::class, 'showScheduleForm'])->name('user.dashboard.index');
-    // Route::get('/user/dashboard', [UserController::class, 'showScheduleForm'])->name('user.dashboard.index');
+    
     Route::get('/user/profile', [UserController::class, 'showProfile'])->name('user.profile');
     Route::get('/user/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
     Route::post('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
@@ -73,13 +73,11 @@ Route::group(['middleware' => 'auth:user'], function () {
     // Schedule generation routes
     Route::post('/generate-schedule', [ScheduleController::class, 'generate'])->name('schedule.generate');
     Route::get('/schedule-result', [ScheduleController::class, 'showGeneratedSchedule'])->name('schedule.result');
-
-    // Schedule export routes
-    Route::get('/export-schedule', function () {
-        // Data schedule diambil dari database atau service
-        $schedule = session('schedule', []);
     
-        return Excel::download(new ScheduleExport($schedule), 'jadwal.xlsx');
-    })->name('export.schedule');
+
+   // Schedule export routes
+    Route::post('/export-schedule', [ScheduleController::class, 'export'])->name('export.schedule');
+    Route::get('/export-schedule', [ScheduleController::class, 'export'])->name('export.schedule');
+
 });
 

@@ -12,7 +12,7 @@
 
                     <!-- User Dashboard Content -->
                     <div class="p-6 text-gray-900">
-                        <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
+                        <p class="text-center text-3xl font-bold">{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
 
                         <!-- Schedule Generation Form with Dummy Data -->
                         <form action="{{ route('schedule.generate') }}" method="POST" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -47,10 +47,20 @@
                                 <input type="text" name="jumlah_kelas" id="jumlah_kelas" class="border-gray-300 rounded-lg mt-1 w-full" placeholder="e.g., A, B, C" required>
                             </div>
 
-                            <!-- Mata Kuliah (Dynamic) -->
+                            <!-- Tanggal Mulai (Start Date for Scheduling) -->
                             <div>
+                                <label for="tanggal_mulai" class="block font-medium">Tanggal Mulai</label>
+                                <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="border-gray-300 rounded-lg mt-1 w-full" required>
+                            </div>
+
+                            <!-- Mata Kuliah (Dynamic) -->
+                            <div x-data="{ open: false }">
                                 <label class="block font-medium">Mata Kuliah</label>
-                                <div class="mt-1 space-y-2">
+                                <button type="button" @click="open = !open" 
+                                    class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg mt-2">
+                                    Pilih Mata Kuliah
+                                </button>
+                                <div x-show="open" class="mt-2 space-y-2" x-cloak>
                                     @foreach($mata_kuliahs as $mata_kuliah)
                                         <div>
                                             <input type="checkbox" name="mata_kuliah[]" id="mata_kuliah_{{ $mata_kuliah->id }}" value="{{ $mata_kuliah->id }}" class="mr-2">
@@ -61,16 +71,14 @@
                                 <small class="text-gray-600">Maksimal memilih 3 mata kuliah.</small>
                             </div>
 
-                            <!-- Tanggal Mulai (Start Date for Scheduling) -->
-                            <div>
-                                <label for="tanggal_mulai" class="block font-medium">Tanggal Mulai</label>
-                                <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="border-gray-300 rounded-lg mt-1 w-full" required>
-                            </div>
-
                             <!-- Jam Kuliah (Dynamic) -->
-                            <div>
+                            <div x-data="{ open: false }">
                                 <label class="block font-medium">Jam Kuliah</label>
-                                <div class="mt-1 space-y-2">
+                                <button type="button" @click="open = !open" 
+                                    class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg mt-2">
+                                    Pilih Jam Kuliah
+                                </button>
+                                <div x-show="open" class="mt-2 space-y-2" x-cloak>
                                     @foreach($jam_kuliahs as $jam_kuliah)
                                         <div>
                                             <input type="checkbox" name="jam_kuliah[]" id="jam_kuliah_{{ $jam_kuliah->id }}" value="{{ $jam_kuliah->id }}" class="mr-2">
@@ -82,9 +90,13 @@
                             </div>
 
                             <!-- Ruangan (Dynamic) -->
-                            <div>
+                            <div x-data="{ open: false }">
                                 <label class="block font-medium">Ruangan</label>
-                                <div class="border border-gray-300 rounded-lg mt-1 p-4">
+                                <button type="button" @click="open = !open" 
+                                    class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg mt-2">
+                                    Pilih Ruangan
+                                </button>
+                                <div x-show="open" class="border border-gray-300 rounded-lg mt-2 p-4" x-cloak>
                                     @foreach($ruangans as $ruangan)
                                         <div class="flex items-center mb-2">
                                             <input 
@@ -108,8 +120,8 @@
                             </div>
 
                             <!-- Submit Button -->
-                            <div class="pt-4 col-span-2">
-                                <button type="submit" class="bg-blue-600 text-white rounded-lg py-2 px-4 hover:bg-blue-700">
+                            <div class="pt-4 col-span-2 text-center text-xl">
+                                <button type="submit" class="bg-pink-800 text-white rounded-lg py-2 px-4 hover:bg-pink-900">
                                     Buat Jadwal
                                 </button>
                             </div>
