@@ -80,7 +80,7 @@ class ScheduleController extends Controller
                 'ruangan' => $ruanganName, 
             ];
         }
-
+        session(['mappedSchedule' => $mappedSchedule]);
         // Tampilkan hasil dengan mappedSchedule
         return view('result', compact('mappedSchedule'));
     }
@@ -88,28 +88,23 @@ class ScheduleController extends Controller
      * Export jadwal ke Excel
      */
     public function export()
-    { 
-            // Retrieve the mapped schedule from session
-            $mappedSchedule = session('mappedSchedule', []);
+    {
+        // Ambil data jadwal yang sudah di-generate
+        $mappedSchedule = session('mappedSchedule', []);
         
-            if (empty($mappedSchedule)) {
-                return back()->with('error', 'Tidak ada jadwal untuk diekspor.');
-            }
-        
-            // Prepare the data for export
-            $exportData = [];
-            foreach ($mappedSchedule as $entry) {
-                $exportData[] = [
-                    'Tanggal' => $entry['tanggal'],
-                    'Jam' => $entry['jam'],
-                    'Mata Kuliah' => $entry['mata_kuliah'],
-                    'Kelas' => $entry['kelas'],
-                    'Ruangan' => $entry['ruangan'],
-                ];
-            }
-        
-            // Export the schedule to Excel
-            return Excel::download(new ScheduleExport($exportData), 'jadwal.xlsx');
+        if (empty($mappedSchedule)) {
+            return redirect()->route('user.dashboard.index')->with('error', 'Tidak ada jadwal untuk diekspor.');
         }
+
+        // Ambil nama user (dari autentikasi atau session)
+        $userName = auth()->user()->name ?? 'User'; // Jika menggunakan autentikasi
+
+        // Format nama file dengan nama user
+        $fileName = 'jadwal_' . str_replace(' ', '_', strtolower($userName)) . '.xlsx';
+
+        // Ekspor ke Excel
+        return Excel::download(new ScheduleExport($mappedSchedule), $fileName);
+    }
+
         
 }

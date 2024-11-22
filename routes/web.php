@@ -72,12 +72,8 @@ Route::group(['middleware' => 'auth:user'], function () {
 
     // Schedule generation routes
     Route::post('/generate-schedule', [ScheduleController::class, 'generate'])->name('schedule.generate');
-    Route::get('/schedule-result', [ScheduleController::class, 'showGeneratedSchedule'])->name('schedule.result');
-    
+    Route::get('/schedule-result', [ScheduleController::class, 'showGeneratedSchedule'])->name('schedule.result');  
 
-   // Schedule export routes
-    Route::post('/export-schedule', [ScheduleController::class, 'export'])->name('export.schedule');
     Route::get('/export-schedule', [ScheduleController::class, 'export'])->name('export.schedule');
-
 });
 

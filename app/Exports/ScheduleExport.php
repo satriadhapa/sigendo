@@ -2,25 +2,20 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ScheduleExport implements FromArray, WithHeadings
+class ScheduleExport implements FromView
 {
-    protected $mappedSchedule;
+    protected $schedule;
 
-    public function __construct(array $mappedSchedule)
+    public function __construct($schedule)
     {
-        $this->mappedSchedule = $mappedSchedule;
+        $this->schedule = $schedule;
     }
 
-    public function array(): array
+    public function view(): View
     {
-        return $this->mappedSchedule;
-    }
-
-    public function headings(): array
-    {
-        return ['Tanggal', 'Jam', 'Mata Kuliah', 'Kelas', 'Ruangan'];
+        return view('exports.schedule', ['mappedSchedule' => $this->schedule]);
     }
 }
