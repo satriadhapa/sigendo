@@ -1,3 +1,4 @@
+<!-- resource/view/lecturersadmin.blade.php -->
 <x-app-layout>
     <div class="flex min-h-screen">
         <div class="flex-1 py-12 px-6">
@@ -28,6 +29,7 @@
                                         <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Jabatan Akademik</th>
                                         <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Program Studi</th>
                                         <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Email</th>
+                                        <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Aksi</th>
                                 
                                     </tr>
                                 </thead>
@@ -40,6 +42,14 @@
                                             <td class="py-2 px-4 text-center">{{ $lecturer->jabatan_akademik }}</td>
                                             <td class="py-2 px-4 text-center">{{ $lecturer->programStudi->name ?? 'Tidak ada data' }}</td>
                                             <td class="py-2 px-4 text-center">{{ $lecturer->email }}</td>
+                                            <td class="py-2 px-4 text-center">
+                                                <a href="{{ route('admin.lecturers.edit', $lecturer->id) }}" class="text-blue-500 hover:underline"><i class="fas fa-pencil-alt"></i>Edit</a>
+                                                <form action="{{ route('admin.lecturers.destroy', $lecturer->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Apakah Anda yakin ingin menghapus dosen ini?')"><i class="fas fa-trash-alt"></i>Delete</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

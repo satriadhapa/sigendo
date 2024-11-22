@@ -39,13 +39,13 @@
                                             <td class="py-2 px-4 text-center">{{ $room->name }}</td>
                                             <td class="py-2 px-4 text-center space-x-2">
                                                 <a href="{{ route('admin.ruangan.edit', $room->id) }}" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
-                                                    Edit
+                                                    <i class="fas fa-pencil-alt"></i> Edit
                                                 </a>
                                                 <form action="{{ route('admin.ruangan.destroy', $room->id) }}" method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" onclick="return confirm('Are you sure you want to delete this room?')" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">
-                                                        Hapus
+                                                        <i class="fas fa-trash-alt"></i> Hapus
                                                     </button>
                                                 </form>
                                             </td>

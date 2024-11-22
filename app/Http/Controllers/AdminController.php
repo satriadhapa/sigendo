@@ -30,7 +30,35 @@ class AdminController extends Controller
         
         return view('profile_admin', compact('admin', 'programStudies'));
     }
+    public function editLecturer($id)
+    {
+        $lecturer = User::findOrFail($id);
+        $programStudies = ProgramStudi::all();
+        return view('edit_lecturer', compact('lecturer', 'programStudies'));
+    }
 
+    public function updateLecturer(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'nomor_induk_pegawai' => 'nullable|string|max:50',
+            'jabatan_akademik' => 'nullable|string|max:100',
+            'program_studi_id' => 'nullable|exists:program_studi,id',
+        ]);
+
+        $lecturer = User::findOrFail($id);
+        $lecturer->update($request->all());
+
+        return redirect()->route('admin.lecturers.index')->with('success', 'Data dosen berhasil diperbarui.');
+    }
+    public function destroyLecturer($id)
+    {
+        $lecturer = User::findOrFail($id);
+        $lecturer->delete();
+
+        return redirect()->route('admin.lecturers.index')->with('success', 'Dosen berhasil dihapus.');
+    }
     public function updateProfile(Request $request)
     {
         $request->validate([

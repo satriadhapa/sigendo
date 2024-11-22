@@ -22,7 +22,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard.index');
     # Route Profile Admin
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
-    Route::put('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+    Route::get('/admin/lecturers/{id}/edit', [AdminController::class, 'editLecturer'])->name('admin.lecturers.edit');
+    Route::delete('/admin/lecturers/{id}', [AdminController::class, 'destroyLecturer'])->name('admin.lecturers.destroy');
+    Route::put('/admin/lecturers/{id}', [AdminController::class, 'updateLecturer'])->name('admin.lecturers.update');
 
     # Route Lecturers
     Route::get('/admin/lecturers', [AdminController::class, 'indexLecturers'])->name('admin.lecturers.index');
