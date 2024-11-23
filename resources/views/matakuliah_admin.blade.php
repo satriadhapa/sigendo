@@ -14,7 +14,7 @@
 
                         <!-- Program Studi Selection Boxes -->
                         <div class="welcome-container">
-                            <h2 class="welcome-heading">{{ __("Program Studi") }}</h1>
+                            <h2 class="welcome-heading">{{ __("Mata Kuliah") }}</h1>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
                             @foreach($programStudies as $program)
