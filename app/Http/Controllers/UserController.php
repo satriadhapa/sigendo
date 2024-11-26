@@ -38,9 +38,9 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'nomor_induk_pegawai' => 'required|string|max:20',
-            'jabatan_akademik' => 'required|string|max:100',
-            'program_studi_id' => 'required|exists:program_studi,id',
+            'nomor_induk_pegawai' => 'nullable|string|max:20',
+            'jabatan_akademik' => 'nullable|string|max:100',
+            'program_studi_id' => 'nullable|exists:program_studi,id',
             'image' => 'nullable|mimes:png,jpg,jpeg'
         ]);
         if($request->has('image')){
@@ -53,7 +53,14 @@ class UserController extends Controller
         }
 
         // Update user data
-        $user->update($request->only(['name', 'email','image' => $path.$filename, 'nomor_induk_pegawai', 'jabatan_akademik', 'program_studi_id']));
+        $user->update([
+            'name'=> $request->input('name'), 
+            'email' => $request->input('email'),
+            'image' => $path.$filename, 
+            'nomor_induk_pegawai' => $request->input('nomor_induk_pegawai'), 
+            'jabatan_akademik' => $request->input('jabatan_akademik'), 
+            'program_studi_id' => $request->input('program_studi_id')
+        ]);
 
         return redirect()->route('user.profile')->with('success', 'Profile updated successfully.');
     }

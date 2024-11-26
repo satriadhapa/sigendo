@@ -144,25 +144,53 @@
                     <div class="form-section">
                         <h1 class="card-title">Selamat Datang di SiGENDO (Sistem Genetika Jadwal Dosen)</h1>
                         <h2 class="sub-title">Buat Akun Baru</h2>
+
+                        <!-- Flash Message -->
+                        @if (session('msg'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('msg') }}
+                            </div>
+                        @endif
+
                         <form action="{{ route('auth.register.store') }}" method="POST">
                             @csrf
+                            <!-- Nama Lengkap -->
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required>
+                                <span class="input-group-text" aria-label="Nama Lengkap"><i class="fas fa-user"></i></span>
+                                <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required value="{{ old('name') }}">
                             </div>
+                            @error('name')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+
+                            <!-- Email -->
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" name="email" class="form-control" placeholder="nama@gmail.com" required>
+                                <span class="input-group-text" aria-label="Email"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="email" class="form-control" placeholder="nama@gmail.com" required value="{{ old('email') }}">
                             </div>
+                            @error('email')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+
+                            <!-- Password -->
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <span class="input-group-text" aria-label="Kata Sandi"><i class="fas fa-lock"></i></span>
                                 <input type="password" name="password" class="form-control" placeholder="Kata Sandi" required>
                             </div>
+                            @error('password')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+
+                            <!-- Konfirmasi Password -->
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <span class="input-group-text" aria-label="Konfirmasi Kata Sandi"><i class="fas fa-lock"></i></span>
                                 <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi Kata Sandi" required>
                             </div>
-                            <div class="button-group">
+                            @error('password_confirmation')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+
+                            <div class="button-group mt-3">
                                 <button type="submit" class="btn btn-custom-login">Daftar</button>
                             </div>
                             <p class="mt-3 text-center">Sudah punya akun? <a href="{{ route('auth.index') }}">Masuk</a></p>

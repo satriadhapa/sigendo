@@ -5,17 +5,30 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\verificationController;
 use Illuminate\Support\Facades\Route;
-use App\Exports\ScheduleExport;
-use Maatwebsite\Excel\Facades\Excel;
+
 
 Route::get('/', [AuthController::class, 'index'])->name('auth.index');
 Route::post('/auth/verify', [AuthController::class, 'verify'])->name('auth.verify');
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-# route untuk register akun
+# Rute Register Akun
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register.store');
+
+# Rute Verifikasi Email
+Route::get('/email/verify', [VerificationController::class, 'notice'])
+    ->middleware('auth')
+    ->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+
+Route::post('/email/verification-notification', [VerificationController::class, 'send'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
 
 Route::group(['middleware' => 'auth:admin'], function () {
     # Route Dashboard Admin

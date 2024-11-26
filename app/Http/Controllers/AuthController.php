@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -20,25 +21,29 @@ class AuthController extends Controller
     }
 
     public function register(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
-    // Create a new user
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
+        // Create a new user and trigger email verification
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-    return redirect()->route('auth.index')->with('msg', 'Akun berhasil dibuat. Silakan login.');
-}
+        event(new Registered($user)); // Trigger the email verification event
+        auth()->login($user);
+
+        return redirect()->route('verification.notice')->with('msg', 'Akun berhasil dibuat. Silakan cek email Anda untuk verifikasi.');
+    }
+
     public function verify(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'email' => "required|email",
             'password' => "required",
         ]);
@@ -49,9 +54,13 @@ class AuthController extends Controller
         }
         // Attempt to log in as regular user
         elseif (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (!Auth::guard('user')->user()->hasVerifiedEmail()) {
+                Auth::guard('user')->logout();
+                return redirect()->back()->with('msg', 'Silakan verifikasi email Anda terlebih dahulu.');
+            }
             return redirect()->intended('/user/dashboard');
         } else {
-            return redirect()->back()->with('msg', 'Email & password incorrect');
+            return redirect()->back()->with('msg', 'Email & password tidak sesuai.');
         }
     }
 
