@@ -35,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // Relationship to Ruangan (many-to-many)
     public function ruangans()
     {
-        return $this->belongsToMany(Ruangan::class, 'ruangan_id');
+        return $this->hasMany(Ruangan::class); // Mengubah menjadi relasi One-to-Many
     }
 
     protected $hidden = [

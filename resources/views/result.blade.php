@@ -11,8 +11,8 @@
                     @include('components.greeting_user')
 
                     <!-- User Dashboard Content -->
-                    <div class="p-6 text-gray-900 text-center font-bold">
-                        <p>{{ __("Selamat Datang, " . Auth::user()->name . "!") }}</p>
+                    <div class="p-6 text-gray-900 text-center font-bold ">
+                        <p class="text-3xl">{{ __("Jadwal  " . Auth::user()->name . "!") }}</p>
                         <br>
                         <!-- Tombol Export -->
                         <div class="mb-4">
@@ -25,7 +25,26 @@
                                 Buat Kembali Jadwal
                             </a>
                         </div>
+                        
+                        <!-- Tombol Setujui -->
+                        <form action="{{ route('schedule.approveAll') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Setujui Ruangan
+                            </button>
+                        </form>
+                        @if (session('success'))
+                        <div class="bg-green-500 text-white px-4 py-2 rounded mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
+                    @if (session('error'))
+                        <div class="bg-red-500 text-white px-4 py-2 rounded mb-4">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                        <br>
                         <!-- Tabel Hasil Jadwal -->
                         <div class="overflow-x-auto">
                             <table class="table-auto w-full border-collapse border border-gray-300">

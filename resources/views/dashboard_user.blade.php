@@ -1,3 +1,4 @@
+{{-- resources\views\dashboard_user.blade.php --}}
 <x-app-layout> 
     <div class="flex min-h-screen">
         <!-- Sidebar Component -->
@@ -91,27 +92,29 @@
 
                             <!-- Ruangan (Dynamic) -->
                             <div x-data="{ open: false }">
-                                <label class="block font-medium">Ruangan</label>
+                                <label class="block font-medium">Ruangan Tersedia</label>
                                 <button type="button" @click="open = !open" 
                                     class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg mt-2">
-                                    Pilih Ruangan
+                                    Tampilkan Ruangan
                                 </button>
                                 <div x-show="open" class="border border-gray-300 rounded-lg mt-2 p-4" x-cloak>
-                                    @foreach($ruangans as $ruangan)
-                                        <div class="flex items-center mb-2">
-                                            <input 
-                                                type="checkbox" 
-                                                id="ruangan_{{ $ruangan->id }}" 
-                                                name="ruangan[]" 
-                                                value="{{ $ruangan->id }}" 
-                                                class="mr-2">
-                                            <label for="ruangan_{{ $ruangan->id }}" class="text-gray-700">
-                                                {{ $ruangan->name }}
-                                            </label>
-                                        </div>
+                                    @foreach($ruangans as $item)
+                                        @if(!$item->is_booked)
+                                            <div class="flex items-center mb-2">
+                                                <input 
+                                                    type="checkbox" 
+                                                    id="ruangan_{{ $item->id }}" 
+                                                    name="ruangan[]" 
+                                                    value="{{ $item->id }}" 
+                                                    class="mr-2">
+                                                <label for="ruangan_{{ $item->id }}">{{ $item->name }}</label>
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
+                                <small class="text-gray-600">Pilih ruangan yang tersedia.</small>
                             </div>
+
 
                             <!-- Durasi Jadwal -->
                             <div>

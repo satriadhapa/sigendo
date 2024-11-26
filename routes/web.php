@@ -90,5 +90,9 @@ Route::group(['middleware' => 'auth:user'], function () {
     Route::get('/schedule-result', [ScheduleController::class, 'showGeneratedSchedule'])->name('schedule.result');  
 
     Route::get('/export-schedule', [ScheduleController::class, 'export'])->name('export.schedule');
+        // Route untuk setujui semua ruangan
+    Route::post('/approve-all', [ScheduleController::class, 'approveAll'])->name('schedule.approveAll');
+    Route::post('/schedule/approve-room/{ruangan_id}', [ScheduleController::class, 'approveRoom'])->name('schedule.approveRoom');
+
 });
 

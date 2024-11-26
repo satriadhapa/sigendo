@@ -20,15 +20,15 @@ class ScheduleController extends Controller
         // Ambil data dari database
         $mataKuliah = MataKuliah::all();
         $jamKuliah = JamKuliah::all();
-        $ruangan = Ruangan::all();
+        $ruangans = Ruangan::where('is_booked', false)->get();
 
-        return view('schedule.index', compact('mataKuliah', 'jamKuliah', 'ruangan'));
+        return view('schedule.index', compact('mataKuliah', 'jamKuliah', 'ruangans'));
     }
 
     /**
      * Menggenerate jadwal menggunakan algoritma genetika.
      */
-        public function generate(Request $request)
+    public function generate(Request $request)
     {
         // Validasi input dari pengguna
         $validated = $request->validate([
@@ -42,7 +42,7 @@ class ScheduleController extends Controller
             'ruangan' => 'required|array|min:1',
             'jumlah_kelas' => 'required|string', // Misalnya "A,B,C" untuk daftar kelas
         ]);
-
+        
         // Tambahkan parameter ke service class
         $params = [
             'tanggal_mulai' => $validated['tanggal_mulai'],
@@ -63,26 +63,73 @@ class ScheduleController extends Controller
         // Pemetaan ID ke nama atau value
         $mappedSchedule = [];
         foreach ($generatedSchedule as $entry) {
-            // Cari nama mata kuliah berdasarkan ID
             $mataKuliahName = MataKuliah::find($entry['mata_kuliah'])->name ?? 'Unknown Mata Kuliah';
-            // Cari nama jam kuliah berdasarkan ID
             $jamName = JamKuliah::find($entry['jam'])->start_time ?? 'Unknown Jam';
             $jamName2 = JamKuliah::find($entry['jam'])->end_time ?? 'Unknown Jam';
-            // Cari nama ruangan berdasarkan ID
-            $ruanganName = Ruangan::find($entry['ruangan'])->name ?? 'Unknown Ruangan';
-
-            // Tambahkan hasil yang sudah dipetakan
+            $ruangan = Ruangan::find($entry['ruangan']);
+    
             $mappedSchedule[] = [
                 'tanggal' => $entry['tanggal'],
-                'jam' => $jamName.' - '.$jamName2,  
-                'mata_kuliah' => $mataKuliahName, 
+                'jam' => $jamName . ' - ' . $jamName2,
+                'mata_kuliah' => $mataKuliahName,
                 'kelas' => $entry['kelas'],
-                'ruangan' => $ruanganName, 
+                'ruangan' => $ruangan->name ?? 'Unknown Ruangan',
+                'ruangan_id' => $ruangan->id,
+                'ruangan_is_booked' => $ruangan->is_booked ?? false,
             ];
         }
+
         session(['mappedSchedule' => $mappedSchedule]);
-        // Tampilkan hasil dengan mappedSchedule
+
         return view('result', compact('mappedSchedule'));
+    }
+    public function showGeneratedSchedule()
+    {
+        // Ambil data jadwal dari session
+        $mappedSchedule = session('mappedSchedule', []);
+
+        if (empty($mappedSchedule)) {
+            return redirect()->route('schedule.index')->with('error', 'Belum ada jadwal yang dihasilkan.');
+        }
+
+        return view('result', compact('mappedSchedule'));
+    }
+    public function approveRoom($ruangan_id)
+    {
+        // Cari ruangan berdasarkan ID
+        $ruangan = Ruangan::findOrFail($ruangan_id);
+
+        // Periksa apakah ruangan sudah disetujui
+        if ($ruangan->is_booked) {
+            return redirect()->back()->with('error', 'Ruangan sudah disetujui.');
+        }
+
+        // Tandai ruangan sebagai disetujui
+        $ruangan->update(['is_booked' => true]);
+
+        return redirect()->back()->with('success', 'Ruangan berhasil disetujui.');
+    }
+    public function approveAll()
+    {
+        // Ambil semua ruangan dari jadwal yang belum disetujui
+        $mappedSchedule = session('mappedSchedule', []);
+
+        // Loop dan setujui ruangan yang belum disetujui
+        foreach ($mappedSchedule as &$entry) {
+            if (!$entry['ruangan_is_booked']) {
+                $ruangan = Ruangan::find($entry['ruangan_id']);
+                if ($ruangan) {
+                    $ruangan->is_booked = true;
+                    $ruangan->save();
+                }
+                $entry['ruangan_is_booked'] = true; // Update status pada jadwal yang sudah ada
+            }
+        }
+
+        // Simpan kembali update pada session
+        session(['mappedSchedule' => $mappedSchedule]);
+
+        return redirect()->route('schedule.result')->with('success', 'Semua ruangan berhasil disetujui!');
     }
     /**
      * Export jadwal ke Excel

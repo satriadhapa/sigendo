@@ -10,5 +10,10 @@ class Ruangan extends Model
     use HasFactory;
     protected $table ='ruangan';
     protected $primaryKey = 'id';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'is_booked', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class); // Menambahkan relasi belongsTo
+    }
 }
