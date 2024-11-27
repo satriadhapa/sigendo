@@ -29,6 +29,7 @@
                                     <tr>
                                         <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">No</th>
                                         <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Nama Ruangan</th>
+                                        <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Status Ruangan</th>
                                         <th class="py-2 px-4 border-b text-center text-gray-800 font-semibold">Aksi</th>
                                     </tr>
                                 </thead>
@@ -37,6 +38,9 @@
                                         <tr class="border-b">
                                             <td class="py-2 px-4 text-center">{{ $rooms->firstItem() + $index }}</td>
                                             <td class="py-2 px-4 text-center">{{ $room->name }}</td>
+                                            <td class="py-2 px-4 text-center">
+                                                {{ $room->is_booked == 0 ? 'Available' : 'Not Available' }}
+                                            </td>
                                             <td class="py-2 px-4 text-center space-x-2">
                                                 <a href="{{ route('admin.ruangan.edit', $room->id) }}" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
                                                     <i class="fas fa-pencil-alt"></i> Edit

@@ -269,11 +269,12 @@ class AdminController extends Controller
     public function updateRuangan(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:ruangan,name,'.$id
+            'name' => 'required|string|max:255|unique:ruangan,name,'.$id,
+            'is_booked' => 'required|boolean'
         ]);
 
         $room = Ruangan::findOrFail($id);
-        $room->update($request->only(['name']));
+        $room->update($request->only(['name', 'is_booked']));
         return redirect()->route('admin.ruangan.index')->with('success', 'Ruangan berhasil diperbarui.');
     }
 
