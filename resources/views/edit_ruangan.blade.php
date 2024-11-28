@@ -25,7 +25,7 @@
                                     <label class="block text-gray-700 font-semibold mb-2" for="name">Nama Ruangan</label>
                                     <input type="text" name="name" id="name" value="{{ $room->name }}" class="w-full border border-gray-300 rounded-lg px-4 py-2" required>
                                 </div>
-                                <select name="is_booked" onchange="this.form.submit()" class="border rounded px-2 py-1">
+                                <select name="is_booked" class="border rounded px-2 py-1">
                                     <option value="0" {{ $room->status == 0 ? 'selected' : '' }}>Available</option>
                                     <option value="1" {{ $room->status == 1 ? 'selected' : '' }}>Not Available</option>
                                 </select>
