@@ -8,12 +8,12 @@ class SchedulingGeneticAlgorithm
 {
     protected $params;
     protected $population = [];
+    protected $initialSchedule = [];
     protected $scheduleDuration;
-    protected $daysPerWeek = 2; // Batas jumlah hari mengajar per minggu
 
     public function __construct($params)
     {
-        set_time_limit(2000); // 300 detik (5 menit)
+        set_time_limit(2000);
         $this->params = $params;
         $this->scheduleDuration = $this->calculateScheduleDates(
             $params['tanggal_mulai'],
@@ -21,12 +21,11 @@ class SchedulingGeneticAlgorithm
         );
     }
 
-    // Generate schedule dates based on duration
-    protected function calculateScheduleDates($startDate, $durationMonths)
+    protected function calculateScheduleDates($startDate, $durationWeeks)
     {
         $dates = [];
         $start = Carbon::parse($startDate);
-        $end = $start->copy()->addMonths($durationMonths);
+        $end = $start->copy()->addWeeks($durationWeeks);
 
         while ($start->lte($end)) {
             $dates[] = $start->format('Y-m-d');
@@ -36,7 +35,6 @@ class SchedulingGeneticAlgorithm
         return $dates;
     }
 
-    // Initialize population
     protected function initializePopulation($populationSize)
     {
         for ($i = 0; $i < $populationSize; $i++) {
@@ -44,97 +42,119 @@ class SchedulingGeneticAlgorithm
         }
     }
 
-    // Create random schedule with weekly teaching day limits
     protected function createRandomSchedule()
     {
+        if (!empty($this->initialSchedule)) {
+            return $this->generateScheduleFromFirstWeek();
+        }
+
         $schedule = [];
-        $usedSlots = []; // Untuk melacak slot waktu yang telah digunakan
-        $weeklyTeachingDays = []; // Melacak jumlah hari mengajar per minggu
+        $usedTimeSlots = [];
+        $usedRooms = [];
+        $usedClasses = [];
 
-        foreach ($this->scheduleDuration as $tanggal) {
-            $week = Carbon::parse($tanggal)->weekOfYear;
+        foreach (array_slice($this->scheduleDuration, 0, 7) as $tanggal) { // Hanya 1 minggu pertama
+            $dailySchedule = [];
+            while (count($dailySchedule) < 2) {
+                $mataKuliah = $this->getRandomElement($this->params['mata_kuliah']);
+                $kelas = $this->getRandomElement(explode(',', $this->params['jumlah_kelas']));
+                $jam = $this->getRandomElement($this->params['jam_kuliah']);
+                $ruangan = $this->getRandomElement($this->params['ruangan']);
 
-            foreach ($this->params['mata_kuliah'] as $mataKuliah) {
-                foreach ($this->params['jam_kuliah'] as $jam) {
-                    $kelas = $this->getRandomElement(explode(',', $this->params['jumlah_kelas']));
-                    $ruangan = $this->getRandomElement($this->params['ruangan']);
+                $timeSlotKey = "$tanggal-$jam";
+                $roomKey = "$tanggal-$jam-$ruangan";
+                $classKey = "$tanggal-$kelas";
 
-                    $slot = "$tanggal-$jam-$ruangan"; // Identifikasi slot waktu dan ruangan
+                if (
+                    !isset($usedTimeSlots[$timeSlotKey]) &&
+                    !isset($usedRooms[$roomKey]) &&
+                    !isset($usedClasses[$classKey])
+                ) {
+                    $usedTimeSlots[$timeSlotKey] = true;
+                    $usedRooms[$roomKey] = true;
+                    $usedClasses[$classKey] = true;
 
-                    // Pastikan jumlah hari mengajar per minggu <= 2
-                    if (!isset($weeklyTeachingDays[$mataKuliah][$week])) {
-                        $weeklyTeachingDays[$mataKuliah][$week] = 0;
-                    }
-
-                    if ($weeklyTeachingDays[$mataKuliah][$week] < $this->daysPerWeek &&
-                        !isset($usedSlots[$slot])) {
-                        // Tambahkan jadwal jika slot belum digunakan
-                        $schedule[] = [
-                            'tanggal' => $tanggal,
-                            'jam' => $jam,
-                            'mata_kuliah' => $mataKuliah,
-                            'kelas' => $kelas,
-                            'ruangan' => $ruangan,
-                        ];
-
-                        // Tandai slot dan update jumlah hari
-                        $usedSlots[$slot] = true;
-                        $weeklyTeachingDays[$mataKuliah][$week]++;
-                    }
+                    $dailySchedule[] = [
+                        'tanggal' => $tanggal,
+                        'jam' => $jam,
+                        'mata_kuliah' => $mataKuliah,
+                        'kelas' => $kelas,
+                        'ruangan' => $ruangan,
+                    ];
                 }
+            }
+
+            $schedule = array_merge($schedule, $dailySchedule);
+        }
+
+        $this->initialSchedule = $schedule; // Simpan jadwal awal
+        return $schedule;
+    }
+
+    protected function generateScheduleFromFirstWeek()
+    {
+        $schedule = [];
+        $initialDates = array_column($this->initialSchedule, 'tanggal');
+        $weekCount = ceil(count($this->scheduleDuration) / 7);
+
+        for ($week = 0; $week < $weekCount; $week++) {
+            foreach ($this->initialSchedule as $entry) {
+                $originalDate = Carbon::parse($entry['tanggal']);
+                $newDate = $originalDate->copy()->addWeeks($week);
+
+                if (Carbon::parse($this->scheduleDuration[0])->diffInDays($newDate) >= count($this->scheduleDuration)) {
+                    break;
+                }
+
+                $schedule[] = [
+                    'tanggal' => $newDate->format('Y-m-d'),
+                    'jam' => $entry['jam'],
+                    'mata_kuliah' => $entry['mata_kuliah'],
+                    'kelas' => $entry['kelas'],
+                    'ruangan' => $entry['ruangan'],
+                ];
             }
         }
 
         return $schedule;
     }
 
-    // Fitness function
     protected function evaluateFitness($schedule)
     {
         $penalty = 0;
-        $usedSlots = []; // Untuk memeriksa konflik waktu dan ruangan
-        $weeklyTeachingDays = []; // Melacak jumlah hari mengajar per minggu
+        $usedTimeSlots = [];
+        $usedRooms = [];
+        $usedClasses = [];
 
         foreach ($schedule as $entry) {
-            $slot = "{$entry['tanggal']}-{$entry['jam']}-{$entry['ruangan']}";
-            $teacherSlot = "{$entry['tanggal']}-{$entry['jam']}-{$entry['mata_kuliah']}";
-            $week = Carbon::parse($entry['tanggal'])->weekOfYear;
+            $timeSlotKey = "{$entry['tanggal']}-{$entry['jam']}";
+            $roomKey = "{$entry['tanggal']}-{$entry['jam']}-{$entry['ruangan']}";
+            $classKey = "{$entry['tanggal']}-{$entry['kelas']}";
 
-            // Periksa konflik ruangan
-            if (isset($usedSlots[$slot])) {
+            if (isset($usedTimeSlots[$timeSlotKey])) {
+                $penalty++;
+            }
+            if (isset($usedRooms[$roomKey])) {
+                $penalty++;
+            }
+            if (isset($usedClasses[$classKey])) {
                 $penalty++;
             }
 
-            // Periksa konflik dosen (mengajar lebih dari satu mata kuliah di waktu yang sama)
-            if (isset($usedSlots[$teacherSlot])) {
-                $penalty++;
-            }
-
-            // Periksa batas hari mengajar per minggu
-            if (!isset($weeklyTeachingDays[$entry['mata_kuliah']][$week])) {
-                $weeklyTeachingDays[$entry['mata_kuliah']][$week] = 0;
-            }
-            $weeklyTeachingDays[$entry['mata_kuliah']][$week]++;
-
-            if ($weeklyTeachingDays[$entry['mata_kuliah']][$week] > $this->daysPerWeek) {
-                $penalty++;
-            }
-
-            $usedSlots[$slot] = true;
-            $usedSlots[$teacherSlot] = true;
+            $usedTimeSlots[$timeSlotKey] = true;
+            $usedRooms[$roomKey] = true;
+            $usedClasses[$classKey] = true;
         }
 
-        return 1 / (1 + $penalty); // Nilai fitness semakin tinggi jika penalty kecil
+        return 1 / (1 + $penalty);
     }
 
-    // Perform crossover
     protected function performCrossover($parent1, $parent2)
     {
         $point = rand(0, count($parent1) - 1);
         return array_merge(array_slice($parent1, 0, $point), array_slice($parent2, $point));
     }
 
-    // Perform mutation
     protected function performMutation($schedule, $mutationProbability)
     {
         foreach ($schedule as &$entry) {
@@ -148,13 +168,11 @@ class SchedulingGeneticAlgorithm
         return $schedule;
     }
 
-    // Get random element
     protected function getRandomElement($array)
     {
         return $array[array_rand($array)];
     }
 
-    // Run the genetic algorithm
     public function run()
     {
         set_time_limit(2000);
@@ -163,7 +181,6 @@ class SchedulingGeneticAlgorithm
         for ($generation = 0; $generation < $this->params['jumlah_generasi']; $generation++) {
             $fitnessScores = array_map([$this, 'evaluateFitness'], $this->population);
 
-            // Select parents and perform crossover
             $nextGeneration = [];
             while (count($nextGeneration) < $this->params['jumlah_populasi']) {
                 $parent1 = $this->selectParent($fitnessScores);
@@ -178,11 +195,9 @@ class SchedulingGeneticAlgorithm
             $this->population = $nextGeneration;
         }
 
-        // Return best schedule
         return $this->getBestSchedule();
     }
 
-    // Select parent based on fitness
     protected function selectParent($fitnessScores)
     {
         $totalFitness = array_sum($fitnessScores);
@@ -198,14 +213,12 @@ class SchedulingGeneticAlgorithm
         return array_key_last($fitnessScores);
     }
 
-    // Get the best schedule from the population
     protected function getBestSchedule()
     {
         $fitnessScores = array_map([$this, 'evaluateFitness'], $this->population);
         $bestIndex = array_keys($fitnessScores, max($fitnessScores))[0];
         $bestSchedule = $this->population[$bestIndex];
 
-        // Urutkan jadwal berdasarkan tanggal
         usort($bestSchedule, function ($a, $b) {
             return strtotime($a['tanggal']) - strtotime($b['tanggal']);
         });
