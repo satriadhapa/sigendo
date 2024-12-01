@@ -3,6 +3,7 @@
         <tr>
             <th>No</th>
             <th>Tanggal</th>
+            <th>Hari</th>
             <th>Jam</th>
             <th>Mata Kuliah</th>
             <th>Kelas</th>
@@ -14,6 +15,7 @@
         <tr>
             <td>{{ $index + 1 }}</td>
             <td>{{ $entry['tanggal'] }}</td>
+            <td>{{ $entry['hari'] }}</td>
             <td>{{ $entry['jam'] }}</td>
             <td>{{ $entry['mata_kuliah'] }}</td>
             <td>{{ $entry['kelas'] }}</td>

@@ -67,8 +67,11 @@ class ScheduleController extends Controller
             $jamName = JamKuliah::find($entry['jam'])->start_time ?? 'Unknown Jam';
             $jamName2 = JamKuliah::find($entry['jam'])->end_time ?? 'Unknown Jam';
             $ruangan = Ruangan::find($entry['ruangan']);
+            $tanggal = $entry['tanggal'];
+            $hari = date('l', strtotime($tanggal)); // Mendapatkan nama hari berdasarkan tanggal
     
             $mappedSchedule[] = [
+                'hari' => $hari,
                 'tanggal' => $entry['tanggal'],
                 'jam' => $jamName . ' - ' . $jamName2,
                 'mata_kuliah' => $mataKuliahName,

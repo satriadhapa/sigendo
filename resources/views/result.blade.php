@@ -52,6 +52,7 @@
                                     <tr>
                                         <th class="border border-gray-300 px-4 py-2">No</th>
                                         <th class="border border-gray-300 px-4 py-2">Tanggal</th>
+                                        <th class="border border-gray-300 px-4 py-2">Hari</th>
                                         <th class="border border-gray-300 px-4 py-2">Jam</th>
                                         <th class="border border-gray-300 px-4 py-2">Mata Kuliah</th>
                                         <th class="border border-gray-300 px-4 py-2">Ruangan</th>
@@ -62,6 +63,7 @@
                                         <tr class="{{ $loop->odd ? 'bg-gray-50' : 'bg-white' }}">
                                             <td class="border border-gray-300 px-4 py-2 text-center">{{ $index + 1 }}</td>
                                             <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['tanggal'] }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['hari'] }}</td>
                                             <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['jam'] }}</td>
                                             <td class="border border-gray-300 px-4 py-2">{{ $entry['mata_kuliah'] }} - {{ $entry['kelas'] }}</td>
                                             <td class="border border-gray-300 px-4 py-2 text-center">{{ $entry['ruangan'] }}</td>
